@@ -3,6 +3,7 @@
 """
 Directory Ledger Validator
 Version: 1.0.3
+Author: Jordan M. Jones
 """
 
 import os
