@@ -2,12 +2,14 @@
 
 """
 Directory Ledger Validator
-Version: 1.0.2
+Version: 1.0.3
 """
 
 import os
 import argparse
 import json
+import fnmatch
+import sys
 from base64 import b64encode, b64decode
 import Crypto.Hash.SHA512 as HASH # pip install pycrypto
 import Crypto.Signature.PKCS1_v1_5 as PKCS
@@ -18,6 +20,13 @@ DEFAULT_LEDGER_FILE = 'eValidate_ledger.json'
 
 # Default Filepath of RSA Public Key.
 DEFAULT_PUBLIC_KEY_FILE = 'eValidate-public.key'
+
+# Default Patterns to Match Against Filenames when Searching for Reports.
+# Note, this must be a Unix shell style pattern (see fnmatch).
+DEFAULT_REPORT_FILEPATTERNS = ['*.xml','*.pdf']
+
+# Default Method for Searching a Directory for Reports.
+DEFAULT_DIRECTORY_RECURSION = True
 
 # Field names used in ledger.
 PATIENT = 'patientid'
@@ -47,6 +56,51 @@ def read_ledger(filepath=DEFAULT_LEDGER_FILE):
         RECORDS = [entry for entry in json.load(f)]
     for rec in RECORDS:
         RECORDS_BY_HASH[rec[FILEHASH]] = rec
+
+#######################
+# File/Directory Util #
+#######################
+
+def clean_path(path):
+    ''' Clean up path of file or directory, ensure proper formatting. 
+        Warn via stderr and ignore path if it is not a file or directory. '''
+    path = os.path.normpath(path)
+    if os.path.isfile(path):
+        return path
+    if os.path.isdir(path):
+        return os.path.join(path,'')
+    else:
+        print >> sys.stderr, 'WARN: invalid path: %s' % path
+
+def is_match(path, patterns):
+    ''' Returns True if path matches any pattern in patterns. '''
+    for pattern in patterns:
+        if fnmatch.fnmatch(path, pattern):
+            return True
+
+def get_filepath_gen(paths, filepatterns=DEFAULT_REPORT_FILEPATTERNS, recursive=DEFAULT_DIRECTORY_RECURSION):
+    ''' Generator function. Yields paths to files whose names match a pattern
+        in filepatterns.
+        If paths contains a directory then each file within it is evaluated,
+        optionally recursing through its subdirectories as well.
+        NOTE, Filepatterns can only include shell-style wildcards, (see fnmatch). '''
+    # Lambda expression used to prevent returning duplicates.
+    seen = set()
+    isvalid = lambda p: is_match(p, filepatterns) and not (p in seen or seen.add(p))
+    for path in filter(None, paths):
+        if os.path.isfile(path) and isvalid(path):
+            yield path
+        elif recursive:
+            for root, dirs, files in os.walk(path):
+                for f in files:
+                    fpath = os.path.join(root, f)
+                    if isvalid(fpath):
+                        yield fpath
+        else:
+            for item in os.listdir(path):
+                fpath = os.path.join(path, item)
+                if os.path.isfile(fpath) and isvalid(fpath):
+                    yield fpath
 
 ######################
 # RSA Key Operations #
@@ -121,7 +175,7 @@ def get_latest_info_by_smp(group_by_filetype=False):
             # Same date found - supplementary file, add file hash.
             maxdic[FILEHASH].append(rec[FILEHASH])
             maxdic[SIGNEDHASH].append(rec[SIGNEDHASH])
-            maxdic[RPTID].add(rec[RPTID]) # JJ_TODO: Is it possible for multiple rptids of one sample to share a the same date?
+            maxdic[RPTID].add(rec[RPTID])
         elif date > maxdic[DATE]:
             # Newer date found, replace old one, create new list for valid hashes.
             maxdic[DATE] = date
@@ -150,26 +204,31 @@ def main():
     parser.add_argument('-c', '--check-latest', dest='check_latest', action='store_true', help='If this flag is present, check that file(s) represent most recent report version for their respective sample')
     parser.add_argument('-l', '--ledger', metavar='LEDGER_FILE', default=DEFAULT_LEDGER_FILE, help='Path of ledger file (default: %s)' % DEFAULT_LEDGER_FILE)
     parser.add_argument('-p', '--publickey', metavar='PUBLIC_KEY_FILE', default=DEFAULT_PUBLIC_KEY_FILE, help='Path of RSA public key file (default: %s)' % DEFAULT_PUBLIC_KEY_FILE)
-    parser.add_argument('paths', nargs='+', help='One or more paths of report files to verify')
+    parser.add_argument('paths', nargs='+', help='One or more paths to report files and/or directories containing report files')
     args = parser.parse_args()
     run(args.paths,
         args.check_latest,
         args.ledger,
         args.publickey)
 
-def run(filepaths, check_latest=False, ledger_path=DEFAULT_LEDGER_FILE, publickey_path=DEFAULT_PUBLIC_KEY_FILE):
-    # Initial setup.
+def run(paths, check_latest=False, ledger_path=DEFAULT_LEDGER_FILE, publickey_path=DEFAULT_PUBLIC_KEY_FILE):
+    # Initialize.
     read_ledger(ledger_path)
     load_verifier(publickey_path)
     latest = get_latest_hashes(group_by_filetype=True) #Note: 'True' may return multiple hashes per sample.
+
+    # Sanitize input.
+    cleanpaths = [clean_path(path) for path in paths]
+    filepathgen = get_filepath_gen(cleanpaths)
     
+    # Output messages.
     valid_msg = 'Valid'
     invalid_msg = 'Not valid'
     latest_msg = 'Latest for %s'
     notlatest_msg = 'Not latest for %s'
-    
+
     # Verify Files.
-    for path in filepaths:
+    for path in filepathgen:
         filehash = get_file_hash(path)
         is_valid = verify_file(filehash)
         if is_valid:
@@ -185,5 +244,4 @@ def run(filepaths, check_latest=False, ledger_path=DEFAULT_LEDGER_FILE, publicke
             print '%s\t%s' % (path, invalid_msg)
 
 if __name__ == '__main__':
-#    pass
     main()
