@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<org.pcpgm.gis.fedmsg.v4.Envelope>
+    <origin>
+        <org.pcpgm.gis.fedmsg.v4.EnvelopeSender>
+            <senderId>BCM HGSC Clinical Laboratory</senderId>
+            <timestampMs>1484660735367</timestampMs>
+        </org.pcpgm.gis.fedmsg.v4.EnvelopeSender>
+    </origin>
+    <objMessage class="hgsc.siteReport">
+        <report>
+            <reportIdentifier>rptid_100003</reportIdentifier>
+            <vipFile>/hgsccl/next-gen/neptune/vip/vip.2016-11-07</vipFile>
+            <reportSections>
+                <section name="Background">
+                    <value><![CDATA[Background Test]]></value>
+                </section>
+                <section name="Comments"/>
+                <section name="Interpretation">
+                    <value><![CDATA[Clinical Correlation Test]]></value>
+                </section>
+                <section name="Recommendation">
+                    <value><![CDATA[Comment Test]]></value>
+                </section>
+                <section name="Methodology">
+                    <value><![CDATA[UNKNOWN]]></value>
+                </section>
+            </reportSections>
+            <geneCoverage>
+                <genes>
+                    <gene>
+                        <name>APOB</name>
+                        <coverage>99.39</coverage>
+                    </gene>
+                    <gene>
+                        <name>CACNA1B</name>
+                        <coverage>97.41</coverage>
+                    </gene>
+                    <gene>
+                        <name>COL5A1</name>
+                        <coverage>98.03</coverage>
+                    </gene>
+                    <gene>
+                        <name>KCNQ1</name>
+                        <coverage>94.72</coverage>
+                    </gene>
+                    <gene>
+                        <name>PMS2</name>
+                        <coverage>99.46</coverage>
+                    </gene>
+                    <gene>
+                        <name>RYR1</name>
+                        <coverage>98.67</coverage>
+                    </gene>
+                    <gene>
+                        <name>TGFBR1</name>
+                        <coverage>93.56</coverage>
+                    </gene>
+                </genes>
+            </geneCoverage>
+            <pgxDescription/>
+            <pgxData>
+                <pgx>
+                    <geneSymbol>CYP2C19</geneSymbol>
+                    <drugs/>
+                    <recommendations>
+                        <recommendation>https://cpicpgx.org/guidelines/guideline-for-voriconazole-and-cyp2c19/</recommendation>
+                        <recommendation>https://cpicpgx.org/guidelines/guideline-for-clopidogrel-and-cyp2c19/</recommendation>
+                        <recommendation>https://cpicpgx.org/guidelines/guideline-for-selective-serotonin-reuptake-inhibitors-and-cyp2d6-and-cyp2c19/</recommendation>
+                        <recommendation>https://cpicpgx.org/guidelines/guideline-for-tricyclic-antidepressants-and-cyp2d6-and-cyp2c19/</recommendation>
+                    </recommendations>
+                    <interpretation>This individual is homozygous for the wild type allele of the CYP2C19 gene.  Based on the genotype result, this patient is predicted to have a CYP2C19 normal metabolizer phenotype. This genotype information can be used by patients and clinicians as part of the shared decision-making process for several drugs metabolized by CYP2C19 including clopidogrel, voriconazole, amitriptyline, citalopram and escitalopram.  For clopidogrel, individuals with this diplotype are expected to have normal platelet inhibition and normal residual platelet aggregation in response to clopidogrel. Label recommended dosage and administration are recommended. Refer to current guidelines for dosage and recommendations at https://cpicpgx.org/guidelines/guideline-for-clopidogrel-and-cyp2c19/. For voriconazole, normal voriconazole metabolism is expected in individuals with this genotype. Initiate therapy with recommended standard of care dosing. Refer to current guidelines for dosage and recommendations at https://cpicpgx.org/guidelines/guideline-for-voriconazole-and-cyp2c19/. For citalopram and escitalopram, initiate therapy with recommended starting dose. Refer to current guidelines for dosage and recommendations at https://cpicpgx.org/guidelines/guideline-for-selective-serotonin-reuptake-inhibitors-and-cyp2d6-and-cyp2c19/. For amitriptyline, initiate therapy with recommended starting dose. Refer to current guidelines for dosage and recommendations at https://cpicpgx.org/guidelines/guideline-for-tricyclic-antidepressants-and-cyp2d6-and-cyp2c19/. For citalopram, escitalopram and amitriptyline, if CYP2D6 genotyping is available, refer to the current guidelines for dosing recommendations.</interpretation>
+                    <diplotype>*1/*1</diplotype>
+                    <phenotype>Normal metabolizer</phenotype>
+                </pgx>
+                <pgx>
+                    <geneSymbol>DPYD</geneSymbol>
+                    <drugs>
+                        <drug>capecitabine</drug>
+                        <drug>fluorouracil</drug>
+                        <drug>tegafur</drug>
+                    </drugs>
+                    <recommendations/>
+                    <interpretation>This individual is homozygous for the functional allele of the DPYD gene.  This genotype information can be used by patients and clinicians as part of the shared decision-making process for fluoropyrimidines (capecitabine, fluorouracil, tegafur).  Based on the genotype result, this patient is predicted to have a normal DPD activity phenotype.  Individuals with this diplotype are expected to have &quot;normal&quot; risk for fluoropyrimidine toxicity. Recommendations include the use of label recommended dosage and administration. Refer to current guidelines for dosage and recommendations at https://cpicpgx.org/guidelines/guideline-for-fluoropyrimidines-and-dpyd/.</interpretation>
+                    <diplotype/>
+                    <phenotype>Normal DPD activity and &quot;normal&quot; risk for fluoropyrimidine toxicity</phenotype>
+                </pgx>
+            </pgxData>
+            <addendums>
+                <addendum>
+                    <onDate>2016-01-31T06:00:00Z</onDate>
+                    <addendumText>Addendum Text 1</addendumText>
+                </addendum>
+            </addendums>
+            <indicationText>Bipolar affective disorder</indicationText>
+            <genomicSource>
+                <codeSystem>LN</codeSystem>
+                <codeText>Germline</codeText>
+                <code>LA6683-2</code>
+                <valueSetAbbr>Germline</valueSetAbbr>
+            </genomicSource>
+            <overallInterpretation>
+                <codeSystem>LN</codeSystem>
+                <codeText>Positive</codeText>
+                <code>LA6576-8</code>
+                <valueSetAbbr>Positive</valueSetAbbr>
+            </overallInterpretation>
+            <testType>
+                <codeSystem>LN</codeSystem>
+                <codeText>Genetic disease analysis overall interpretation</codeText>
+                <code>51968-6</code>
+                <valueSetAbbr>Genetic disease analysis overall interpretation</valueSetAbbr>
+            </testType>
+            <status>FINAL</status>
+            <caseType>CLINICAL</caseType>
+            <labStatus>COMPLETE</labStatus>
+            <editedBy>
+                <byName>user-venner</byName>
+                <onDate>2017-04-05T06:00:00Z</onDate>
+            </editedBy>
+            <statusBy>
+                <byName>user-venner</byName>
+                <onDate>2017-04-05T06:00:00Z</onDate>
+            </statusBy>
+            <order>
+                <orderDate></orderDate>
+                <senderPatientNumber>AB01-22651339</senderPatientNumber>
+                <senderFacilityName>UNKNOWN</senderFacilityName>
+                <senderOrderNumber>22651339</senderOrderNumber>
+                <senderLabControlNumber>22651339_AB01-22651339_100118</senderLabControlNumber>
+                <localOrderNumber>smpid_1</localOrderNumber>
+            </order>
+            <patient>
+                <firstName></firstName>
+                <middleName></middleName>
+                <lastName></lastName>
+                <dateOfBirth></dateOfBirth>
+                <raceOrEthnicity>
+                    <org.pcpgm.gis.fedmsg.v4.Code>
+                        <codeSystem>EMERGE-GIS-LOCAL</codeSystem>
+                        <codeText>Unspecified</codeText>
+                        <code>10024-3</code>
+                        <valueSetAbbr>Unspecified</valueSetAbbr>
+                    </org.pcpgm.gis.fedmsg.v4.Code>
+                    <org.pcpgm.gis.fedmsg.v4.Code>
+                        <codeSystem>EMERGE-GIS-LOCAL</codeSystem>
+                        <codeText>Unspecified</codeText>
+                        <code>10024-3</code>
+                        <valueSetAbbr>Unspecified</valueSetAbbr>
+                    </org.pcpgm.gis.fedmsg.v4.Code>
+                </raceOrEthnicity>
+                <sex>
+                    <codeSystem>HL7-TABLE-0001</codeSystem>
+                    <codeText>Female</codeText>
+                    <code>F</code>
+                    <valueSetAbbr>Female</valueSetAbbr>
+                </sex>
+                <diseaseStatus>Unknown</diseaseStatus>
+                <deidentified>false</deidentified>
+            </patient>
+            <physicians>
+                <org.pcpgm.gis.fedmsg.v4.Physician>
+                    <firstName>Richard H</firstName>
+                    <lastName>Gibbs</lastName>
+                </org.pcpgm.gis.fedmsg.v4.Physician>
+            </physicians>
+            <cnvsFailed>false</cnvsFailed>
+            <reportVariants>
+                <org.pcpgm.gis.fedmsg.v4.ReportVariant>
+                    <externalId>12345678</externalId>
+                    <transcriptId>NM_000059.38</transcriptId>
+                    <chromosome>2</chromosome>
+                    <geneSymbol>MSH2</geneSymbol>
+                    <interrogatedButNotFound>false</interrogatedButNotFound>
+                    <notInterpreted>false</notInterpreted>
+                    <alleleState>
+                        <codeSystem>LN</codeSystem>
+                        <codeText>Heterozygous</codeText>
+                        <code>LA6706-1</code>
+                        <valueSetAbbr>Heterozygous</valueSetAbbr>
+                    </alleleState>
+                    <categoryType>UNKNOWN_SIGNIFICANCE</categoryType>
+                    <genomicSource>
+                        <codeSystem>LN</codeSystem>
+                        <codeText>Germline</codeText>
+                        <code>LA6683-2</code>
+                        <valueSetAbbr>Germline</valueSetAbbr>
+                    </genomicSource>
+                    <confirmedStatus>
+                        <confirmedBySanger>false</confirmedBySanger>
+                        <confirmedByMLPA>true</confirmedByMLPA>
+                    </confirmedStatus>
+                    <type>CNV</type>
+                    <medianRPKM>1775</medianRPKM>
+                    <exonQCValue>0.13</exonQCValue>
+                    <rpkm>2729</rpkm>
+                    <exonQCPF>Pass</exonQCPF>
+                    <log2R>0.62</log2R>
+                </org.pcpgm.gis.fedmsg.v4.ReportVariant>
+            </reportVariants>
+            <reportAssays>
+                <org.pcpgm.gis.fedmsg.v4.ReportAssay>
+                    <assayVersionExternalId>20160822</assayVersionExternalId>
+                    <testName>eMERGE-Seq</testName>
+                    <testCode>eMERGE-Seq</testCode>
+                </org.pcpgm.gis.fedmsg.v4.ReportAssay>
+            </reportAssays>
+            <specimens>
+                <org.pcpgm.gis.fedmsg.v4.Specimen>
+                    <label>AB01-22651339</label>
+                    <type>
+                        <codeSystem>Baylor</codeSystem>
+                        <codeText>DNA</codeText>
+                        <code>Baylor</code>
+                        <valueSetAbbr>DNA</valueSetAbbr>
+                    </type>
+                    <collectionDate>2015-02-25T06:00:00Z</collectionDate>
+                    <receivedDate>2016-01-11T06:00:00Z</receivedDate>
+                </org.pcpgm.gis.fedmsg.v4.Specimen>
+            </specimens>
+            <patientDiseases>
+                <org.pcpgm.gis.fedmsg.v4.ReportDisease>
+                    <name>Bipolar affective disorder</name>
+                    <diseaseCode>
+                        <codeSystem>DOID</codeSystem>
+                        <codeText>Bipolar affective disorder</codeText>
+                        <code>DOID 3312 (bipolar disorder)</code>
+                        <valueSetAbbr>Bipolar affective disorder</valueSetAbbr>
+                    </diseaseCode>
+                </org.pcpgm.gis.fedmsg.v4.ReportDisease>
+            </patientDiseases>
+            <interpretedDiseases>
+                <org.pcpgm.gis.fedmsg.v4.ReportDisease>
+                    <name>Breast cancer susceptibility [MIM 114480]</name>
+                    <diseaseCode>
+                        <codeSystem>MIM</codeSystem>
+                        <codeText>Breast cancer susceptibility [MIM 114480]</codeText>
+                        <code>114480</code>
+                        <valueSetAbbr>Breast cancer susceptibility [MIM 114480]</valueSetAbbr>
+                    </diseaseCode>
+                </org.pcpgm.gis.fedmsg.v4.ReportDisease>
+                <org.pcpgm.gis.fedmsg.v4.ReportDisease>
+                    <name>Pancreatic cancer susceptibility 3 [MIM 613348]</name>
+                    <diseaseCode>
+                        <codeSystem>MIM</codeSystem>
+                        <codeText>Pancreatic cancer susceptibility 3 [MIM 613348]</codeText>
+                        <code>613348</code>
+                        <valueSetAbbr>Pancreatic cancer susceptibility 3 [MIM 613348]</valueSetAbbr>
+                    </diseaseCode>
+                </org.pcpgm.gis.fedmsg.v4.ReportDisease>
+            </interpretedDiseases>
+        </report>
+        <refVariants>
+            <org.pcpgm.gis.fedmsg.v4.ReferenceVariant>
+                <externalId>12345678</externalId>
+                <transcriptId>NM_000059.38</transcriptId>
+                <chromosome>2</chromosome>
+                <geneRegion>2:47630331-47630541</geneRegion>
+                <geneIdentifier>
+                    <codeSystem>HGNC</codeSystem>
+                    <codeText>MSH2</codeText>
+                    <code>MSH2</code>
+                    <authority>HUGO</authority>
+                    <authorityName>Human Genome Organization</authorityName>
+                </geneIdentifier>
+                <alignments>
+                    <org.pcpgm.gis.fedmsg.v4.ReferenceVariantAlignment>
+                        <genomeBuildName>hg19</genomeBuildName>
+                        <chromosome>2</chromosome>
+                        <startPosition>47630331</startPosition>
+                        <endPosition>47630541</endPosition>
+                    </org.pcpgm.gis.fedmsg.v4.ReferenceVariantAlignment>
+                </alignments>
+                <currentInterpRevision>
+                    <variantExternalId>12345678</variantExternalId>
+                    <contentApproval>
+                        <byName>user-venner</byName>
+                        <onDate>2017-04-05T06:00:00Z</onDate>
+                    </contentApproval>
+                    <approval>
+                        <byName>user-venner</byName>
+                        <onDate>2017-04-05T06:00:00Z</onDate>
+                    </approval>
+                    <interpretations>
+                        <org.pcpgm.gis.fedmsg.v4.VariantInterp>
+                            <categoryType>UNKNOWN_SIGNIFICANCE</categoryType>
+                            <inheritance>AD</inheritance>
+                            <diseaseCodes>
+                                <org.pcpgm.gis.fedmsg.v4.Code>
+                                    <codeSystem>MIM</codeSystem>
+                                    <codeText>Hereditary non-polyposis colorectal cancer, type 1 [MIM 120435]</codeText>
+                                    <code>120435</code>
+                                    <valueSetAbbr>Hereditary non-polyposis colorectal cancer, type 1 [MIM 120435]</valueSetAbbr>
+                                </org.pcpgm.gis.fedmsg.v4.Code>
+                            </diseaseCodes>
+                        </org.pcpgm.gis.fedmsg.v4.VariantInterp>
+                    </interpretations>
+                </currentInterpRevision>
+            </org.pcpgm.gis.fedmsg.v4.ReferenceVariant>
+        </refVariants>
+        <refAssayVersions>
+            <org.pcpgm.gis.fedmsg.v4.ReferenceAssayVersion>
+                <externalIdentifier>20160822</externalIdentifier>
+                <testName>eMERGE-Seq</testName>
+                <testCode>eMERGE-Seq</testCode>
+                <methodology>UNKNOWN</methodology>
+            </org.pcpgm.gis.fedmsg.v4.ReferenceAssayVersion>
+        </refAssayVersions>
+    </objMessage>
+</org.pcpgm.gis.fedmsg.v4.Envelope>
