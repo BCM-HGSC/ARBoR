@@ -30,13 +30,20 @@ DEFAULT_REPORT_FILEPATTERNS = ['*.xml','*.pdf']
 DEFAULT_DIRECTORY_RECURSION = True
 
 # Field names used in ledger.
+# Field names used in ledger and ledger output.
 PATIENT = 'patientid'
 SAMPLE = 'localid'
 RPTID = 'rptid'
-DATE = 'date'
-FILEPATH = 'filepath'
-FILEHASH = 'hash'
-SIGNEDHASH = 'signature'
+RPTDATE = 'rptdate'
+#FILEPATH = 'filepath'
+FILEHASH = 'filehash'
+FILESIG = 'filesignature'
+REPORTTYPE = 'rpttype'
+BLOCKINDEX = 'blockindex'
+BLOCKTIMESTAMP = 'blocktimestamp'
+PREVBLOCKHASH = 'previousblockhash'
+BLOCKHASH = 'blockhash'
+BLOCKSIG = 'blocksignature'
 
 # Block size for buffering file reads.
 BLOCKSIZE = 65536 #64*1024
@@ -147,7 +154,7 @@ def verify_file(filehash):
         Returns True if file can be matched by digital signature against a ledger record. '''
     rec = get_record_by_hash(filehash)
     if rec:
-        sig = b64decode(rec[SIGNEDHASH])
+        sig = b64decode(rec[FILESIG])
         return VERIFIER.verify(filehash, sig)
     else:
         return False
@@ -159,29 +166,29 @@ def verify_file(filehash):
 def get_latest_info_by_smp(group_by_filetype=False):
     ''' Determine which rptid and set of hashes are from the latest report version for each sample. '''
     defaultdic = {
-                  DATE : 0,
+                  RPTDATE : 0, # <<<<< Changed from: DATE : 0
                   RPTID : set(),
                   FILEHASH : [],
-                  SIGNEDHASH : [],
+                  FILESIG : [], # <<<<< Changed from: SIGNEDHASH : []
                  }
     latest_by_smp = {}
     for rec in RECORDS:
         smp = rec[SAMPLE]
         if group_by_filetype:
             # Refine grouping to distinguish file extension.
-            smp += os.path.splitext(rec[FILEPATH])[1]
-        date = int(rec[DATE]) # dev_note: millisecond timestamp may be a string in json file.
+            smp += rec[REPORTTYPE] # <<<<< Changed from: smp += os.path.splitext(rec[FILEPATH])[1]
+        date = int(rec[RPTDATE]) # dev_note: millisecond timestamp may be a string in json file.
         maxdic = latest_by_smp.setdefault(smp, defaultdic.copy())
-        if date == maxdic[DATE]:
+        if date == maxdic[RPTDATE]:
             # Same date found - supplementary file, add file hash.
             maxdic[FILEHASH].append(rec[FILEHASH])
-            maxdic[SIGNEDHASH].append(rec[SIGNEDHASH])
+            maxdic[FILESIG].append(rec[FILESIG])
             maxdic[RPTID].add(rec[RPTID])
-        elif date > maxdic[DATE]:
+        elif date > maxdic[RPTDATE]:
             # Newer date found, replace old one, create new list for valid hashes.
-            maxdic[DATE] = date
+            maxdic[RPTDATE] = date
             maxdic[FILEHASH] = [rec[FILEHASH]]
-            maxdic[SIGNEDHASH] = [rec[SIGNEDHASH]]
+            maxdic[FILESIG] = [rec[FILESIG]]
             maxdic[RPTID] = set([rec[RPTID]])
         else:
             # Older date, ignore.
