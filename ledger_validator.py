@@ -154,7 +154,7 @@ def verify_file(filehash):
         Returns True if file can be matched by digital signature against a ledger record. '''
     rec = get_record_by_hash(filehash)
     if rec:
-        sig = b64decode(rec[SIGNEDHASH])
+        sig = b64decode(rec[FILESIG])
         return VERIFIER.verify(filehash, sig)
     else:
         return False
@@ -177,18 +177,18 @@ def get_latest_info_by_smp(group_by_filetype=False):
         if group_by_filetype:
             # Refine grouping to distinguish file extension.
             smp += rec[REPORTTYPE] # <<<<< Changed from: smp += os.path.splitext(rec[FILEPATH])[1]
-        date = int(rec[DATE]) # dev_note: millisecond timestamp may be a string in json file.
+        date = int(rec[RPTDATE]) # dev_note: millisecond timestamp may be a string in json file.
         maxdic = latest_by_smp.setdefault(smp, defaultdic.copy())
-        if date == maxdic[DATE]:
+        if date == maxdic[RPTDATE]:
             # Same date found - supplementary file, add file hash.
             maxdic[FILEHASH].append(rec[FILEHASH])
-            maxdic[SIGNEDHASH].append(rec[SIGNEDHASH])
+            maxdic[FILESIG].append(rec[FILESIG])
             maxdic[RPTID].add(rec[RPTID])
-        elif date > maxdic[DATE]:
+        elif date > maxdic[RPTDATE]:
             # Newer date found, replace old one, create new list for valid hashes.
-            maxdic[DATE] = date
+            maxdic[RPTDATE] = date
             maxdic[FILEHASH] = [rec[FILEHASH]]
-            maxdic[SIGNEDHASH] = [rec[SIGNEDHASH]]
+            maxdic[FILESIG] = [rec[FILESIG]]
             maxdic[RPTID] = set([rec[RPTID]])
         else:
             # Older date, ignore.
