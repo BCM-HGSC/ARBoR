@@ -1,21 +1,35 @@
-import sys
+import pytest
 
 from ledger_validator import run
 
 
-def test_1():
-    assert 2 + 2 == 4, 'bleh'
-
-
-def test_ledger_missing():
-    run('test/resources/missing',
+def test_ledger_basic():
+    run(['test/resources/files'],
         True,
-        'test/resources/bad-ledger-missing.json',
-        'test/resources/bad-key.key')
+        'test/resources/eValidate_ledger.json',
+        'test/resources/eValidate-public.key')
 
 
-def test_all_bad():
-    run('test/resources/missing',
-        True,
-        'test/resources/bad-ledger-a.json',
-        'test/resources/bad-key.key')
+@pytest.mark.xfail  # Missing input should be an error
+def test_ledger_missing_input():
+    with pytest.raises(ValueError):
+        run(['test/resources/missing'],
+            True,
+            'test/resources/eValidate_ledger.json',
+            'test/resources/eValidate-public.key')
+
+
+def test_ledger_bad_ledger():
+    with pytest.raises(ValueError):
+        run(['test/resources/files'],
+            True,
+            'test/resources/bad-ledger-a.json',
+            'test/resources/eValidate-public.key')
+
+
+def test_ledger_bad_key():
+    with pytest.raises(Exception):
+        run(['test/resources/files'],
+            True,
+            'test/resources/eValidate_ledger.json',
+            'test/resources/bad-key.key')
