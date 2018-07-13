@@ -9,6 +9,10 @@ Simple offline verification of file integrity against modification or corruption
 - Public Key *(eValidate-public.key)*
 
 ## Usage:
+
+#### Generating the ledger
+`python ledger_generator.py --ledger=eValidate_ledger.json --privatekey=eValidate-private.key --publickey=eValidate-public.key --recursive reportdir/`
+
 #### Verifying that a file's contents have not been altered
 `python ledger_validator.py --ledger=eValidate_ledger.json --publickey=eValidate-public.key report.pdf`
 
