@@ -2,7 +2,7 @@
 
 """
 Directory Ledger Validator
-Version: 1.0.3
+Version: 1.0.3.1
 Author: Jordan M. Jones
 """
 
@@ -29,7 +29,6 @@ DEFAULT_REPORT_FILEPATTERNS = ['*.xml','*.pdf']
 # Default Method for Searching a Directory for Reports.
 DEFAULT_DIRECTORY_RECURSION = True
 
-# Field names used in ledger.
 # Field names used in ledger and ledger output.
 PATIENT = 'patientid'
 SAMPLE = 'localid'
@@ -46,10 +45,11 @@ BLOCKHASH = 'blockhash'
 BLOCKSIG = 'blocksignature'
 
 # Block size for buffering file reads.
-BLOCKSIZE = 65536 #64*1024
+BUFFERSIZE = 65536 #64*1024 # JJ_NOTE: Rename BLOCKSIZE to avoid confusion with file buffering and ledger block.
+#BLOCKSIZE = 65536 #64*1024
 
 # Globals initialized by functions.
-RECORDS = None
+BLOCKCHAIN = [] #JJ_NOTE: Renamed from 'RECORDS' to 'BLOCKCHAIN'.
 RECORDS_BY_HASH = {}
 VERIFIER = None
 
@@ -58,11 +58,11 @@ VERIFIER = None
 ##########################
 
 def read_ledger(filepath=DEFAULT_LEDGER_FILE):
-    ''' Read records from ledger file and store in global variable RECORDS. '''
-    global RECORDS, RECORDS_BY_HASH
+    ''' Read records from ledger file and store in global variable BLOCKCHAIN. '''
+    global BLOCKCHAIN, RECORDS_BY_HASH
     with open(filepath, 'rb') as f:
-        RECORDS = [entry for entry in json.load(f)]
-    for rec in RECORDS:
+        BLOCKCHAIN = [entry for entry in json.load(f)]
+    for rec in BLOCKCHAIN:
         RECORDS_BY_HASH[rec[FILEHASH]] = rec
 
 #######################
@@ -70,7 +70,7 @@ def read_ledger(filepath=DEFAULT_LEDGER_FILE):
 #######################
 
 def clean_path(path):
-    ''' Clean up path of file or directory, ensure proper formatting. 
+    ''' Clean up path of file or directory, ensure proper formatting.
         Warn via stderr and ignore path if it is not a file or directory. '''
     path = os.path.normpath(path)
     if os.path.isfile(path):
@@ -143,14 +143,14 @@ def get_file_hash(filepath):
     ''' Create and return a hash object populated with the contents of the file at filepath. '''
     filehash = HASH.new()
     with open(filepath, 'rb') as afile:
-        buf = afile.read(BLOCKSIZE)
+        buf = afile.read(BUFFERSIZE)
         while len(buf) > 0:
             filehash.update(buf)
-            buf = afile.read(BLOCKSIZE)
+            buf = afile.read(BUFFERSIZE)
     return filehash
 
 def verify_file(filehash):
-    ''' Verify contents of file have not been tampered with. 
+    ''' Verify contents of file have not been tampered with.
         Returns True if file can be matched by digital signature against a ledger record. '''
     rec = get_record_by_hash(filehash)
     if rec:
@@ -172,7 +172,7 @@ def get_latest_info_by_smp(group_by_filetype=False):
                   FILESIG : [], # <<<<< Changed from: SIGNEDHASH : []
                  }
     latest_by_smp = {}
-    for rec in RECORDS:
+    for rec in BLOCKCHAIN:
         smp = rec[SAMPLE]
         if group_by_filetype:
             # Refine grouping to distinguish file extension.
@@ -228,7 +228,7 @@ def run(paths, check_latest=False, ledger_path=DEFAULT_LEDGER_FILE, publickey_pa
     # Sanitize input.
     cleanpaths = [clean_path(path) for path in paths]
     filepathgen = get_filepath_gen(cleanpaths)
-    
+
     # Output messages.
     valid_msg = 'Valid'
     invalid_msg = 'Not valid'
