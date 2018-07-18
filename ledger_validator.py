@@ -2,7 +2,7 @@
 
 """
 Directory Ledger Validator
-Version: 1.0.3.1
+Version: 1.0.3.2
 Author: Jordan M. Jones
 """
 
@@ -166,27 +166,27 @@ def verify_file(filehash):
 def get_latest_info_by_smp(group_by_filetype=False):
     ''' Determine which rptid and set of hashes are from the latest report version for each sample. '''
     defaultdic = {
-                  RPTDATE : 0, # <<<<< Changed from: DATE : 0
+                  BLOCKINDEX : 0,
                   RPTID : set(),
                   FILEHASH : [],
-                  FILESIG : [], # <<<<< Changed from: SIGNEDHASH : []
+                  FILESIG : [],
                  }
     latest_by_smp = {}
     for rec in BLOCKCHAIN:
         smp = rec[SAMPLE]
         if group_by_filetype:
             # Refine grouping to distinguish file extension.
-            smp += rec[REPORTTYPE] # <<<<< Changed from: smp += os.path.splitext(rec[FILEPATH])[1]
-        date = int(rec[RPTDATE]) # dev_note: millisecond timestamp may be a string in json file.
+            smp += rec[REPORTTYPE]
+        index = rec[BLOCKINDEX]
         maxdic = latest_by_smp.setdefault(smp, defaultdic.copy())
-        if date == maxdic[RPTDATE]:
+        if index == maxdic[BLOCKINDEX]:
             # Same date found - supplementary file, add file hash.
             maxdic[FILEHASH].append(rec[FILEHASH])
             maxdic[FILESIG].append(rec[FILESIG])
             maxdic[RPTID].add(rec[RPTID])
-        elif date > maxdic[RPTDATE]:
+        elif index > maxdic[BLOCKINDEX]:
             # Newer date found, replace old one, create new list for valid hashes.
-            maxdic[RPTDATE] = date
+            maxdic[BLOCKINDEX] = index
             maxdic[FILEHASH] = [rec[FILEHASH]]
             maxdic[FILESIG] = [rec[FILESIG]]
             maxdic[RPTID] = set([rec[RPTID]])
