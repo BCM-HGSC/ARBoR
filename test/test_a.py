@@ -19,7 +19,7 @@ def test_ledger_basic(capsys):
     assert sorted_lines == expected_lines
 
 
-@pytest.mark.xfail  # Missing input should be an error
+@pytest.mark.xfail  # TODO: Missing input should be an error
 def test_ledger_missing_input():
     with pytest.raises(ValueError):
         run(['test/resources/missing'],
