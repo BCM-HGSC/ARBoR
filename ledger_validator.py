@@ -63,7 +63,15 @@ def read_ledger(filepath=DEFAULT_LEDGER_FILE):
     with open(filepath, 'rb') as f:
         BLOCKCHAIN = [entry for entry in json.load(f)]
     for rec in BLOCKCHAIN:
+        convert_field_to_binary(rec, FILEHASH)
+        convert_field_to_binary(rec, FILESIG)
+        convert_field_to_binary(rec, PREVBLOCKHASH)
         RECORDS_BY_HASH[rec[FILEHASH]] = rec
+
+def convert_field_to_binary(record, field_name):
+    old = record[field_name]
+    new = old.encode('ascii')
+    record[field_name] = new
 
 #######################
 # File/Directory Util #
