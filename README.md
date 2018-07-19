@@ -8,7 +8,7 @@ The overall ARBOR system consists of four parts:
 - ARBOR Push is integrated into the pipeline of a clinical laboratory. Once the pipeline has generated a clinical report and related files, it uses ARBOR Push to transmit a record about this file to the ARBOR Service.
 - ARBOR Service stores records in a public blockchain. It only accepts trusted records from the clinical pipeline.
 - ARBOR Client is typically run by an institutional end user as part of the ingestion process for new clinical reports and related files. It fetches new blocks from the ARBOR Service and uses its local copy of the blockchain to validate and identify files.
-- ARBORScan  is a mobile app for both iOS and Android platforms and is typically run by an end user to fetch metadata about existing reports and check the authenticity and versions of these reports. It also maintains a local copy of the blockchain. It's primary input is scanning QR codes from existing reports. <links to Android and iOS app stores>
+- ARBORScan  is a mobile app for both <a href='https://goo.gl/QZXpqg'>iOS</a> and Android platforms and is typically run by an end user to fetch metadata about existing reports and check the authenticity and versions of these reports. It also maintains a local copy of the blockchain. It's primary input is scanning QR codes from existing reports. 
 
 ARBOR is built using Python and is available for public use. Instructions on  building a ledger and validating the contents of a ledger are provided. 
 
