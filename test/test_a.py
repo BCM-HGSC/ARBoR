@@ -47,20 +47,20 @@ def test_ledger_bad_key():
 
 
 def test_read_ledger():
-    ledger_validator.RECORDS = None
+    ledger_validator.BLOCKCHAIN = None
     ledger_validator.RECORDS_BY_HASH = {}
     ledger_validator.read_ledger('test/resources/eValidate_ledger_00.json')
     EXEPECTED_RECORDS = [
         {
-            u'previousblockhash': u'',
+            u'previousblockhash': b'',
             u'localid': u'smpid_0',
-            u'filehash': u'n0Od+EuQKQX9pp2w4jCOhyUixW9z+NLDVa14220cPTkYkojRc82'
-                         u'tgcRTOfF+P9qbQpnLRIMjTNlNBKD+A5XGtQ==',
+            u'filehash': b'n0Od+EuQKQX9pp2w4jCOhyUixW9z+NLDVa14220cPTkYkojRc82'
+                         b'tgcRTOfF+P9qbQpnLRIMjTNlNBKD+A5XGtQ==',
             u'blockindex': 0,
-            u'filesignature': u'CVzfsk4X6Uy8uRiOwcgHWE1ouaa7+1XxLb3s3xWR2MCEMj'
-                              u'3h/uuIs8ueADBSZ+gPheEFHuV9ESvikMI96TWR80MiotYc'
-                              u'S2AYOpJO7x2VWT0SAa95YEPimShLgPyRXGf44JZPXha/s'
-                              u'/0ySI5LePqHuz54l+0ThYHDkQz87irEc1Y=',
+            u'filesignature': b'CVzfsk4X6Uy8uRiOwcgHWE1ouaa7+1XxLb3s3xWR2MCEMj'
+                              b'3h/uuIs8ueADBSZ+gPheEFHuV9ESvikMI96TWR80MiotYc'
+                              b'S2AYOpJO7x2VWT0SAa95YEPimShLgPyRXGf44JZPXha/s'
+                              b'/0ySI5LePqHuz54l+0ThYHDkQz87irEc1Y=',
             u'blocktimestamp': 1530889311.415133,
             u'patientid': u'22651339',
             u'rptid': u'rptid_100002',
@@ -68,7 +68,7 @@ def test_read_ledger():
             u'rptdate': 1064739376262
         }
     ]
-    assert ledger_validator.RECORDS == EXEPECTED_RECORDS
+    assert ledger_validator.BLOCKCHAIN == EXEPECTED_RECORDS
     block = EXEPECTED_RECORDS[0]
     assert ledger_validator.RECORDS_BY_HASH == {
         block[u'filehash']: block
@@ -96,6 +96,6 @@ def test_get_file_hash():
         'test/resources/files/rpt_test-100000.pdf'
     )
     file_digest = b64encode(file_hash.digest())
-    expected = ('edoLZI4L+2EdzFbgVNklCSF0AR49TitsWWBb9B4WyMHyWXRJE7R2BoEY4E'
-                'sudic3UG5AZ2d+z9hFCz4lqWQvdw==')
+    expected = (b'edoLZI4L+2EdzFbgVNklCSF0AR49TitsWWBb9B4WyMHyWXRJE7R2BoEY4E'
+                b'sudic3UG5AZ2d+z9hFCz4lqWQvdw==')
     assert file_digest == expected

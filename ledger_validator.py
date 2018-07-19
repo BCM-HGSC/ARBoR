@@ -6,6 +6,7 @@ Version: 1.0.3.2
 Author: Jordan M. Jones
 """
 
+from __future__ import print_function
 import os
 import argparse
 import json
@@ -63,7 +64,15 @@ def read_ledger(filepath=DEFAULT_LEDGER_FILE):
     with open(filepath, 'rb') as f:
         BLOCKCHAIN = [entry for entry in json.load(f)]
     for rec in BLOCKCHAIN:
+        convert_field_to_binary(rec, FILEHASH)
+        convert_field_to_binary(rec, FILESIG)
+        convert_field_to_binary(rec, PREVBLOCKHASH)
         RECORDS_BY_HASH[rec[FILEHASH]] = rec
+
+def convert_field_to_binary(record, field_name):
+    old = record[field_name]
+    new = old.encode('ascii')
+    record[field_name] = new
 
 #######################
 # File/Directory Util #
@@ -78,7 +87,7 @@ def clean_path(path):
     if os.path.isdir(path):
         return os.path.join(path,'')
     else:
-        print >> sys.stderr, 'WARN: invalid path: %s' % path
+        print('WARN: invalid path: %s' % path, file=sys.stderr)
 
 def is_match(path, patterns):
     ''' Returns True if path matches any pattern in patterns. '''
@@ -95,7 +104,7 @@ def get_filepath_gen(paths, filepatterns=DEFAULT_REPORT_FILEPATTERNS, recursive=
     # Lambda expression used to prevent returning duplicates.
     seen = set()
     isvalid = lambda p: is_match(p, filepatterns) and not (p in seen or seen.add(p))
-    for path in filter(None, paths):
+    for path in [_f for _f in paths if _f]:
         if os.path.isfile(path) and isvalid(path):
             yield path
         elif recursive:
@@ -199,7 +208,7 @@ def get_latest_hashes(group_by_filetype=False):
     ''' Get set of hash digests from the ledger associated with the latest reports of each sample. '''
     # Flatten signatures of latest rptid into a single list.
     latest_by_smp = get_latest_info_by_smp(group_by_filetype)
-    listoflists = [s[FILEHASH] for s in latest_by_smp.itervalues()]
+    listoflists = [s[FILEHASH] for s in latest_by_smp.values()]
     flattened = set([val for hashlist in listoflists for val in hashlist])
     return flattened
 
@@ -243,13 +252,13 @@ def run(paths, check_latest=False, ledger_path=DEFAULT_LEDGER_FILE, publickey_pa
             if check_latest:
                 rec = get_record_by_hash(filehash)
                 if rec[FILEHASH] in latest:
-                    print '%s\t%s\t%s' % (path, valid_msg, latest_msg % rec[SAMPLE])
+                    print('%s\t%s\t%s' % (path, valid_msg, latest_msg % rec[SAMPLE]))
                 else:
-                    print '%s\t%s\t%s' % (path, valid_msg, notlatest_msg % rec[SAMPLE])
+                    print('%s\t%s\t%s' % (path, valid_msg, notlatest_msg % rec[SAMPLE]))
             else:
-                print '%s\t%s' % (path, valid_msg)
+                print('%s\t%s' % (path, valid_msg))
         else:
-            print '%s\t%s' % (path, invalid_msg)
+            print('%s\t%s' % (path, invalid_msg))
 
 if __name__ == '__main__':
     main()
