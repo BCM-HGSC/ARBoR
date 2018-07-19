@@ -1,4 +1,4 @@
-# eValidator
+# ARBOR (Authenticated Resources in Blockchain Registry)
 
 Simple offline verification of file integrity against modification or corruption
 
@@ -11,10 +11,10 @@ Simple offline verification of file integrity against modification or corruption
 ## Usage:
 
 #### Generating the ledger
-`python ledger_generator.py --ledger=eValidate_ledger.json --privatekey=eValidate-private.key --publickey=eValidate-public.key --recursive reportdir/`
+`python ledger_generator.py --ledger=arbor_ledger.json --privatekey=arbor-private.key --publickey=arbor-public.key --recursive reportdir/`
 
 #### Verifying that a file's contents have not been altered
-`python ledger_validator.py --ledger=eValidate_ledger.json --publickey=eValidate-public.key report.pdf`
+`python ledger_validator.py --ledger=arbor_ledger.json --publickey=arbor-public.key report.pdf`
 
 #### Checking if file is the most recent report version for its sample
 Include the optional flag `--check-latest`
