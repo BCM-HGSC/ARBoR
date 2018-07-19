@@ -1,3 +1,5 @@
+from base64 import b64encode
+
 import pytest
 
 import ledger_validator
@@ -71,3 +73,29 @@ def test_read_ledger():
     assert ledger_validator.RECORDS_BY_HASH == {
         block[u'filehash']: block
     }
+
+
+def test_clean_path():
+    result = ledger_validator.clean_path('test/resources/files')
+    assert result == 'test/resources/files/'
+
+
+def test_is_match():
+    assert ledger_validator.is_match(
+        'test/resources/files/rpt_test-100000.pdf',
+        ['*.xml','*.pdf']
+    ) == True
+    assert bool (ledger_validator.is_match(
+        'test/resources/files/rpt_test-100000.pdf',
+        ['*.xml','*.txt']
+    )) == False  # TODO: Function relies on the falsiness of None
+
+
+def test_get_file_hash():
+    file_hash = ledger_validator.get_file_hash(
+        'test/resources/files/rpt_test-100000.pdf'
+    )
+    file_digest = b64encode(file_hash.digest())
+    expected = ('edoLZI4L+2EdzFbgVNklCSF0AR49TitsWWBb9B4WyMHyWXRJE7R2BoEY4E'
+                'sudic3UG5AZ2d+z9hFCz4lqWQvdw==')
+    assert file_digest == expected
