@@ -24,11 +24,11 @@ import Crypto.Signature.PKCS1_v1_5 as PKCS
 from Crypto.PublicKey import RSA
 
 # Default path for reading/writing ledger file.
-DEFAULT_LEDGER_FILE = 'eValidate_ledger.json'
+DEFAULT_LEDGER_FILE = 'arbor_ledger.json'
 
 # Default path for reading/writing RSA Key files.
-DEFAULT_PRIVATE_KEY_FILE = 'eValidate-private.key'
-DEFAULT_PUBLIC_KEY_FILE = 'eValidate-public.key'
+DEFAULT_PRIVATE_KEY_FILE = 'arbor-private.key'
+DEFAULT_PUBLIC_KEY_FILE = 'arbor-public.key'
 
 # Bit-length used when generating a new RSA private key.
 KEY_SIZE = 3072

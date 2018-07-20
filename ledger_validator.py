@@ -18,10 +18,10 @@ import Crypto.Signature.PKCS1_v1_5 as PKCS
 from Crypto.PublicKey import RSA
 
 # Default Filepath of Ledger.
-DEFAULT_LEDGER_FILE = 'eValidate_ledger.json'
+DEFAULT_LEDGER_FILE = 'arbor_ledger.json'
 
 # Default Filepath of RSA Public Key.
-DEFAULT_PUBLIC_KEY_FILE = 'eValidate-public.key'
+DEFAULT_PUBLIC_KEY_FILE = 'arbor-public.key'
 
 # Default Patterns to Match Against Filenames when Searching for Reports.
 # Note, this must be a Unix shell style pattern (see fnmatch).
