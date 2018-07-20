@@ -18,7 +18,7 @@ import Crypto.Signature.PKCS1_v1_5 as PKCS
 from Crypto.PublicKey import RSA
 
 # Default Filepath of Ledger.
-DEFAULT_LEDGER_FILE = 'arbor_ledger.json'
+DEFAULT_LEDGER_FILE = 'arbor-ledger.json'
 
 # Default Filepath of RSA Public Key.
 DEFAULT_PUBLIC_KEY_FILE = 'arbor-public.key'
