@@ -2,7 +2,6 @@
 
 """
 Directory Ledger Generator
-Version: 1.0.3.2
 Author: Jordan M. Jones
 """
 
@@ -22,6 +21,8 @@ import xml.etree.ElementTree as ET # https://docs.python.org/2/library/xml.etree
 import Crypto.Hash.SHA512 as HASH # pip install pycrypto
 import Crypto.Signature.PKCS1_v1_5 as PKCS
 from Crypto.PublicKey import RSA
+
+__version__ = '1.0.3.2'
 
 # Default path for reading/writing ledger file.
 DEFAULT_LEDGER_FILE = 'arbor-ledger.json'
@@ -502,6 +503,8 @@ def create_ledger(paths=[''], recursive=True, ledger_path=DEFAULT_LEDGER_FILE):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--version', action='version',
+                        version='%(prog)s {}'.format(__version__))
     parser.add_argument('-r', '--recursive', action='store_true', help='Recursively search subdirectories for files (default is to ignore subdirectories)')
     parser.add_argument('-l', '--ledger', metavar='LEDGER_FILE', default=DEFAULT_LEDGER_FILE, help='Filepath to use for the ledger file, preferably with the extension \'.json\' (default: %s)' % DEFAULT_LEDGER_FILE)
     parser.add_argument('-P', '--privatekey', metavar='PRIVATE_KEY_FILE', default=DEFAULT_PRIVATE_KEY_FILE, help='Filepath of RSA private key file. If none exists, a key will be generated (default: %s)' % DEFAULT_PRIVATE_KEY_FILE)

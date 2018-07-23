@@ -2,7 +2,6 @@
 
 """
 Directory Ledger Validator
-Version: 1.0.3.2
 Author: Jordan M. Jones
 """
 
@@ -16,6 +15,8 @@ from base64 import b64encode, b64decode
 import Crypto.Hash.SHA512 as HASH # pip install pycrypto
 import Crypto.Signature.PKCS1_v1_5 as PKCS
 from Crypto.PublicKey import RSA
+
+__version__ = '1.0.3.2'
 
 # Default Filepath of Ledger.
 DEFAULT_LEDGER_FILE = 'arbor-ledger.json'
@@ -218,6 +219,8 @@ def get_latest_hashes(group_by_filetype=False):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--version', action='version',
+                        version='%(prog)s {}'.format(__version__))
     parser.add_argument('-c', '--check-latest', dest='check_latest', action='store_true', help='If this flag is present, check that file(s) represent most recent report version for their respective sample')
     parser.add_argument('-l', '--ledger', metavar='LEDGER_FILE', default=DEFAULT_LEDGER_FILE, help='Path of ledger file (default: %s)' % DEFAULT_LEDGER_FILE)
     parser.add_argument('-p', '--publickey', metavar='PUBLIC_KEY_FILE', default=DEFAULT_PUBLIC_KEY_FILE, help='Path of RSA public key file (default: %s)' % DEFAULT_PUBLIC_KEY_FILE)
