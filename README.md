@@ -22,11 +22,14 @@ ARBOR is built using Python and is available for public use. Instructions on  bu
 
 ### Generating the ledger
 
+To generate a ledger, pass in a directory of reports and a private key. The generator currently requires XML files that provide the metadata for associated PDF files. This command will generate a ledger for all files in a folder:
+
     python ledger_generator.py -h  # for help
     python ledger_generator.py --ledger=arbor-ledger.json --privatekey=arbor-private.key --publickey=arbor-public.key --recursive reportdir/
 
 ### Verifying that a file is current and unaltered
-The ARBOR Client can be used by any approved entity holding the publickey to validate the authenticity and integrity of the received artifacts. Running the following command on a folder of reports or a single report will identify if the report(s) are valid and up to date.
+
+To verify files against a ledger, pass in either individual files or directories along with a public key that corresponds to the private key used when generating the ledger. Running the following command on a folder of reports or a single report will identify if the report(s) are valid and up to date:
 
     python ledger_validator.py -h  # for help
     python ledger_validator.py --ledger=arbor-ledger.json --publickey=arbor-public.key --check-latest reportdir
