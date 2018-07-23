@@ -1,0 +1,10 @@
+files/rpt_test-100000.pdf	Not valid
+files/rpt_test-100000.xml	Valid	Not latest for smpid_0
+files/rpt_test-100001.pdf	Not valid
+files/rpt_test-100001.xml	Valid	Not latest for smpid_1
+files/rpt_test-100002.pdf	Not valid
+files/rpt_test-100002.xml	Valid	Not latest for smpid_0
+files/rpt_test-100003.pdf	Not valid
+files/rpt_test-100003.xml	Valid	Latest for smpid_1
+files/rpt_test-100004.pdf	Not valid
+files/rpt_test-100004.xml	Valid	Latest for smpid_0
