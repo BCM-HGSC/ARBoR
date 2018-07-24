@@ -9,8 +9,8 @@ from ledger_validator import run
 def test_ledger_basic(capsys):
     run(['test/resources/files'],
         True,
-        'test/resources/eValidate_ledger.json',
-        'test/resources/eValidate-public.key')
+        'test/resources/arbor-ledger.json',
+        'test/resources/arbor-public.key')
     captured = capsys.readouterr()
     assert captured.err == ''
     lines = captured.out.splitlines()
@@ -26,8 +26,8 @@ def test_ledger_missing_input():
     with pytest.raises(ValueError):
         run(['test/resources/missing'],
             True,
-            'test/resources/eValidate_ledger.json',
-            'test/resources/eValidate-public.key')
+            'test/resources/arbor-ledger.json',
+            'test/resources/arbor-public.key')
 
 
 def test_ledger_bad_ledger():
@@ -35,21 +35,21 @@ def test_ledger_bad_ledger():
         run(['test/resources/files'],
             True,
             'test/resources/bad-ledger-a.json',
-            'test/resources/eValidate-public.key')
+            'test/resources/arbor-public.key')
 
 
 def test_ledger_bad_key():
     with pytest.raises(Exception):
         run(['test/resources/files'],
             True,
-            'test/resources/eValidate_ledger.json',
+            'test/resources/arbor-ledger.json',
             'test/resources/bad-key.key')
 
 
 def test_read_ledger():
     ledger_validator.BLOCKCHAIN = None
     ledger_validator.RECORDS_BY_HASH = {}
-    ledger_validator.read_ledger('test/resources/eValidate_ledger_00.json')
+    ledger_validator.read_ledger('test/resources/arbor-ledger-00.json')
     EXEPECTED_RECORDS = [
         {
             u'previousblockhash': b'',
