@@ -6,7 +6,7 @@ from ledger_generator import run as generate
 from ledger_validator import run as validate
 
 
-def test_ledger_basic(tmpdir, capsys):
+def test_ledger_roundtrip(tmpdir, capsys):
     """Functional test"""
     ledger_path = bytes(tmpdir.join('arbor-ledger-test.json'))
     private_key_path = b'test/resources/arbor-private.key'
