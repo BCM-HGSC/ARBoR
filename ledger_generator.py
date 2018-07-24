@@ -5,10 +5,12 @@ Directory Ledger Generator
 Author: Jordan M. Jones
 """
 
+from __future__ import unicode_literals
 import os
 import re
 import argparse
 import fnmatch
+from functools import partial
 import glob
 import itertools
 import json
@@ -102,7 +104,7 @@ HTML_REQUIRED_FIELDS = set([
                             RPTDATE,
                             PATIENT,
 ])
-assert HTML_REQUIRED_FIELDS.issubset(HTML_FIELDS_MAP.values()), 'required fields must be included as keys in HTML_FIELDS_MAP'
+assert HTML_REQUIRED_FIELDS.issubset(list(HTML_FIELDS_MAP.values())), 'required fields must be included as keys in HTML_FIELDS_MAP'
 
 # Block size for buffering file reads.
 BUFFERSIZE = 65536 #64*1024 # JJ_NOTE: Rename BLOCKSIZE to avoid confusion with file buffering and ledger block.
@@ -118,7 +120,7 @@ SIGNER = None
 def write_ledger(ledger_list, filepath=DEFAULT_LEDGER_FILE):
     ''' Write ledger records to file. '''
     with open(filepath, 'wb') as f:
-        json.dump(ledger_list, f, indent=2, sort_keys=True)
+        dump(ledger_list, f, indent=2, sort_keys=True)
         #JJ_TODO: yaml.dump(ledger_list, f, default_flow_style=False)
 
 ####################
@@ -137,7 +139,7 @@ def genesis_block():
 def get_record_dump(record):
     ''' Returns a single digestible string of dictionary contents. '''
     # NOTE: JSON with sorted keys provides is a very universal spec.
-    return json.dumps(record, sort_keys=True)
+    return dumps(record, sort_keys=True)
 
 def hash_block(block):
     ''' Generate checksum of block. '''
@@ -219,7 +221,18 @@ def is_already_in_ledger(filepath):
     filehash = get_file_hash(filepath)
     is_in_ledger = verify_file(filehash)
     return is_in_ledger
-        
+
+class ASCIIBytesJSONEncoder(json.JSONEncoder):
+    """Extends normal encode to convert """
+    def default(self, o):
+        if isinstance(o, bytes):
+            return o.decode('ascii')
+        else:
+            return JSONEncoder.default(self, o)
+
+dump = partial(json.dump, cls=ASCIIBytesJSONEncoder)
+dumps = partial(json.dumps, cls=ASCIIBytesJSONEncoder)
+
 ######################
 # RSA Key Operations #
 ######################
@@ -229,7 +242,7 @@ def init_rsa(privatekey_path=DEFAULT_PRIVATE_KEY_FILE, publickey_path=DEFAULT_PU
     if os.path.isfile(privatekey_path):
         privatekey = import_key(privatekey_path)
     else:
-        print 'RSA keys not found.'
+        print('RSA keys not found.')
         privatekey = generate_rsa_keys(privatekey_path, publickey_path)
     load_signer(privatekey)
 
@@ -243,14 +256,14 @@ def load_signer(privatekey):
 def generate_rsa_keys(privatefile=DEFAULT_PRIVATE_KEY_FILE, pubfile=DEFAULT_PUBLIC_KEY_FILE, key_size=KEY_SIZE):
     ''' Generate a fresh RSA private/public key pair and write to file.
         Returns the privatekey object. '''
-    print 'Generating new RSA keys...'
+    print('Generating new RSA keys...')
     privatekey = RSA.generate(key_size)
     publickey = privatekey.publickey()
     with open(privatefile, 'wb') as f:
         f.write(privatekey.exportKey())
     with open(pubfile, 'wb') as f:
         f.write(publickey.exportKey())
-    print 'New RSA keys generated, written to %s, %s' % (privatefile, pubfile)
+    print('New RSA keys generated, written to %s, %s' % (privatefile, pubfile))
     return privatekey
 
 def import_key(filepath=DEFAULT_PRIVATE_KEY_FILE):
@@ -341,8 +354,8 @@ def get_fields_from_phi_table(phi_table):
         try:
             while True:
                 # Read field name and value from two contiguous cells.
-                c1 = cell_iter.next()
-                c2 = cell_iter.next()
+                c1 = next(cell_iter)
+                c2 = next(cell_iter)
                 key = c1.getText(strip=True).rsplit(':', 1)[0] # Strip trailing colon.
                 val = c2.getText(strip=True)
                 fields[key] = val
@@ -396,17 +409,17 @@ def parse_xml_files(filepaths):
             xmlroot = ET.parse(path).getroot()
         except ET.ParseError as e:
             # TODO_LATER: Set up a logger for messages like this.
-            print 'INFO: Skipped unparsable XML file: %s' % path
+            print('INFO: Skipped unparsable XML file: %s' % path)
             continue
         if not xmlroot.findtext(XML_RPTID_TAG):
-            print 'INFO: Skipped invalid report file: %s' % path
+            print('INFO: Skipped invalid report file: %s' % path)
             continue
         # Collect required fields into dict.
         rec = {XML_TAGS_MAP[tag]: xmlroot.findtext(tag) for tag in XML_TAGS_MAP}
         # Cheap bugfix - make sure timestamp is an integer instead of string.
         rec[RPTDATE] = int(rec[RPTDATE])
         # Check required fields are valid.
-        if None or '' in rec.values():
+        if None or '' in list(rec.values()):
             raise Exception('Report file is missing required fields! %s, %s' % (path, rec))
         rec[FILEPATH] = path
         # Add dict to list.
@@ -435,7 +448,7 @@ def create_pdf_rec_from_html_reports(html_report_filepaths):
             rec[FILEPATH] = pdf_path
             records.append(rec)
         except Exception as e:
-            print 'WARN: Skipped HTML file: "%s" - %s' % (html_path, e)
+            print('WARN: Skipped HTML file: "%s" - %s' % (html_path, e))
     return records
 
 def sign_records(records):
@@ -496,7 +509,6 @@ def create_ledger(paths=[''], recursive=True, ledger_path=DEFAULT_LEDGER_FILE):
     # JJ_TODO: Append to file instead of overwriting existing.
     write_ledger(BLOCKCHAIN, ledger_path)
 
-    
 ###############
 # Main Method #
 ###############
@@ -526,9 +538,9 @@ def run(paths, recursive=True, ledger_path=DEFAULT_LEDGER_FILE, privatekey_path=
     #load_verifier(publickey_path)
 
     # Create ledger.
-    print 'Generating Ledger'
+    print('Generating Ledger')
     create_ledger(paths, recursive, ledger_path)
-    print 'Done'
+    print('Done')
 
 if __name__ == '__main__':
     #pass
