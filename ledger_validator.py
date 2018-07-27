@@ -10,6 +10,7 @@ import os
 import argparse
 import json
 import fnmatch
+from functools import partial
 import sys
 from base64 import b64encode, b64decode
 import Crypto.Hash.SHA512 as HASH # pip install pycrypto
@@ -38,7 +39,7 @@ RPTID = 'rptid'
 RPTDATE = 'rptdate'
 #FILEPATH = 'filepath'
 FILEHASH = 'filehash'
-FILESIG = 'filesignature'
+#FILESIG = 'filesignature'
 REPORTTYPE = 'rpttype'
 BLOCKINDEX = 'blockindex'
 BLOCKTIMESTAMP = 'blocktimestamp'
@@ -66,7 +67,7 @@ def read_ledger(filepath=DEFAULT_LEDGER_FILE):
         BLOCKCHAIN = [entry for entry in json.load(f)]
     for rec in BLOCKCHAIN:
         convert_field_to_binary(rec, FILEHASH)
-        convert_field_to_binary(rec, FILESIG)
+        convert_field_to_binary(rec, BLOCKSIG)
         convert_field_to_binary(rec, PREVBLOCKHASH)
         RECORDS_BY_HASH[rec[FILEHASH]] = rec
 
@@ -159,15 +160,53 @@ def get_file_hash(filepath):
             buf = afile.read(BUFFERSIZE)
     return filehash
 
+# def verify_file(filehash):
+#     ''' Verify contents of file have not been tampered with.
+#         Returns True if file can be matched by digital signature against a ledger record. '''
+#     rec = get_record_by_hash(filehash)
+#     if rec:
+#         sig = b64decode(rec[FILESIG])
+#         return VERIFIER.verify(filehash, sig)
+#     else:
+#         return False
+
+# JJ_TODO: Rename to 'verify_block'.
 def verify_file(filehash):
-    ''' Verify contents of file have not been tampered with.
-        Returns True if file can be matched by digital signature against a ledger record. '''
-    rec = get_record_by_hash(filehash)
-    if rec:
-        sig = b64decode(rec[FILESIG])
-        return VERIFIER.verify(filehash, sig)
+    ''' Verify contents of file have not been tampered with. 
+        Returns True if block can be verified by its digital signature. '''
+    block = get_record_by_hash(filehash)
+    if block:
+        blocksig = b64decode(block[BLOCKSIG])
+        # Remove sig from block before hashing the block to .
+        del block[BLOCKSIG]
+        blockhash = hash_block(block)
+        return VERIFIER.verify(blockhash, blocksig)
     else:
         return False
+
+def get_record_dump(record):
+    ''' Returns a single digestible string of dictionary contents. '''
+    # NOTE: JSON with sorted keys provides is a very universal spec.
+    return dumps(record, sort_keys=True)
+
+# def hash_block(block):
+#     ''' Generate checksum of block. '''
+#     return b64encode(HASH.new(get_record_dump(block)).digest())
+
+def hash_block(block):
+    ''' Generate hash object of the block contents. '''
+    return HASH.new(get_record_dump(block))
+
+class ASCIIBytesJSONEncoder(json.JSONEncoder):
+    """Extends normal encode to convert """
+    def default(self, o):
+        if isinstance(o, bytes):
+            return o.decode('ascii')
+        else:
+            return JSONEncoder.default(self, o)
+
+dump = partial(json.dump, cls=ASCIIBytesJSONEncoder)
+dumps = partial(json.dumps, cls=ASCIIBytesJSONEncoder)
 
 ######################
 # Latest File Checks #
@@ -179,7 +218,7 @@ def get_latest_info_by_smp(group_by_filetype=False):
                   BLOCKINDEX : 0,
                   RPTID : set(),
                   FILEHASH : [],
-                  FILESIG : [],
+                  BLOCKSIG : [], # JJ_TODO: Should blocksig even be a part of this?
                  }
     latest_by_smp = {}
     for rec in BLOCKCHAIN:
@@ -192,13 +231,13 @@ def get_latest_info_by_smp(group_by_filetype=False):
         if index == maxdic[BLOCKINDEX]:
             # Same date found - supplementary file, add file hash.
             maxdic[FILEHASH].append(rec[FILEHASH])
-            maxdic[FILESIG].append(rec[FILESIG])
+            maxdic[BLOCKSIG].append(rec[BLOCKSIG])
             maxdic[RPTID].add(rec[RPTID])
         elif index > maxdic[BLOCKINDEX]:
             # Newer date found, replace old one, create new list for valid hashes.
             maxdic[BLOCKINDEX] = index
             maxdic[FILEHASH] = [rec[FILEHASH]]
-            maxdic[FILESIG] = [rec[FILESIG]]
+            maxdic[BLOCKSIG] = [rec[BLOCKSIG]]
             maxdic[RPTID] = set([rec[RPTID]])
         else:
             # Older date, ignore.

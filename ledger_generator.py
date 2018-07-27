@@ -14,7 +14,7 @@ from functools import partial
 import glob
 import itertools
 import json
-import yaml # http://pyyaml.org/wiki/PyYAML
+#import yaml # http://pyyaml.org/wiki/PyYAML
 import time
 from base64 import b64encode
 from bs4 import BeautifulSoup
@@ -70,7 +70,7 @@ RPTID = 'rptid'
 RPTDATE = 'rptdate'
 FILEPATH = 'filepath'
 FILEHASH = 'filehash'
-FILESIG = 'filesignature' # JJ_NOTE: Rename from SIGNEDHASH to filesignature to maintain clarity of what's being signed - file vs block
+#FILESIG = 'filesignature' # JJ_NOTE: No longer using filesignature - instead using blocksignature.
 REPORTTYPE = 'rpttype'
 BLOCKINDEX = 'blockindex'
 BLOCKTIMESTAMP = 'blocktimestamp'
@@ -141,22 +141,37 @@ def get_record_dump(record):
     # NOTE: JSON with sorted keys provides is a very universal spec.
     return dumps(record, sort_keys=True)
 
+# def hash_block(block):
+#     ''' Generate checksum of block. '''
+#     return b64encode(HASH.new(get_record_dump(block)).digest())
+
 def hash_block(block):
-    ''' Generate checksum of block. '''
-    return b64encode(HASH.new(get_record_dump(block)).digest())
+    ''' Generate hash object of the block contents. '''
+    return HASH.new(get_record_dump(block))
+
+def sign_block(block):
+    ''' Create a digital signature of the block contents and add into block. 
+        This must be the very last step. '''
+    blockhash = hash_block(block)
+    # Generate a digital signature for the block.
+    signature = b64encode(SIGNER.sign(blockhash))
+    block[BLOCKSIG] = signature
+    return block
 
 def append_block(chain, record):
     ''' Link a new record onto the chain. '''
     # Link current block to previous block in chain.
     if len(chain) != 0:
         previous_block = chain[-1] 
-        record[PREVBLOCKHASH] = hash_block(previous_block)
+        record[PREVBLOCKHASH] = b64encode(hash_block(previous_block).digest())
     else: 
         previous_block = genesis_block()
         record[PREVBLOCKHASH] = ''
     # Increment block index.
     record[BLOCKINDEX] = previous_block[BLOCKINDEX] + 1
     record[BLOCKTIMESTAMP] = time.time()
+    # Lock block contents with a digital signature.
+    sign_block(record)
     # JJ_TODO: Do some validations on the record - test that it should be allowed before adding onto the chain.
     # Append block to chain.
     chain.append(record)
@@ -451,6 +466,7 @@ def create_pdf_rec_from_html_reports(html_report_filepaths):
             print('WARN: Skipped HTML file: "%s" - %s' % (html_path, e))
     return records
 
+# JJ_TODO: rename method - does not sign anymore.
 def sign_records(records):
     ''' Generate hash, signature, for file associated with each record, store in ledger record. '''
     for record in records:
@@ -459,9 +475,9 @@ def sign_records(records):
         filehash = get_file_hash(filepath)
         # Store the checksum.
         record[FILEHASH] = b64encode(filehash.digest()) # Note, hex is preferred for visual comparisons.
-        # Generate a digital signature for the file.
-        signature = b64encode(SIGNER.sign(filehash))
-        record[FILESIG] = signature
+#         # Generate a digital signature for the file.
+#         signature = b64encode(SIGNER.sign(filehash))
+#         record[FILESIG] = signature
     return
 
 def create_xml_records(paths, recursive):
