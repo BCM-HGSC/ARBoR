@@ -119,7 +119,7 @@ SIGNER = None
 
 def write_ledger(ledger_list, filepath=DEFAULT_LEDGER_FILE):
     ''' Write ledger records to file. '''
-    with open(filepath, 'wb') as f:
+    with open(filepath, 'w') as f:
         dump(ledger_list, f, indent=2, sort_keys=True)
         #JJ_TODO: yaml.dump(ledger_list, f, default_flow_style=False)
 
@@ -143,7 +143,10 @@ def get_record_dump(record):
 
 def hash_block(block):
     ''' Generate checksum of block. '''
-    return b64encode(HASH.new(get_record_dump(block)).digest())
+    data = get_record_dump(block)
+    if not isinstance(data, bytes):
+        data = data.encode('ascii')
+    return b64encode(HASH.new(data).digest())
 
 def append_block(chain, record):
     ''' Link a new record onto the chain. '''
