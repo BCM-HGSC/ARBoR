@@ -96,6 +96,6 @@ def test_get_file_hash():
         'test/resources/files/rpt_test-100000.pdf'
     )
     file_digest = b64encode(file_hash.digest())
-    expected = (b'edoLZI4L+2EdzFbgVNklCSF0AR49TitsWWBb9B4WyMHyWXRJE7R2BoEY4E'
-                b'sudic3UG5AZ2d+z9hFCz4lqWQvdw==')
+    expected = (b'Hwh+kaKZ/sqhcL4KBo0gXoiWUw9P1TsuQfUBEu8bdADFBWBJCJWw2Rcdu3L'
+                b'OxCOCbM6N3p/xFhvzzpBbV2d+uA==')
     assert file_digest == expected
