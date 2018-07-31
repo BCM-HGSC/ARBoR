@@ -13,10 +13,31 @@ The overall ARBOR system consists of four parts:
 ARBOR is built using Python and is available for public use. Instructions on  building a ledger and validating the contents of a ledger are provided.
 
 ## Requirements:
-- Python 2.7 or 3.6+
-- PyCrypto package: `pip install pycrypto`
+
+- Python:
+    - 2.7
+    - 3.6
+    - 3.7
+- Packages:
+    - Beautiful Soup 4.6+
+    - PyCrypto 2.6+
+    - PyYAML 3.13+
 - Ledger File *(eg. arbor-ledger.json)*
 - Public Key *(eg. arbor-public.key)*
+
+## Installation
+
+Using pip to install into the active environment:
+
+    pip install -r requirements.txt
+
+Using conda to install into the active environment using user channel settings:
+
+    conda install --file requirements.txt
+
+Using conda to create a new environment:
+
+    conda create -c defaults --override-channels -n py37-arbor python=3.7 --file requirements.txt
 
 ## Usage:
 
@@ -33,3 +54,19 @@ To verify files against a ledger, pass in either individual files or directories
 
     python ledger_validator.py -h  # for help
     python ledger_validator.py --ledger=arbor-ledger.json --publickey=arbor-public.key --check-latest reportdir
+
+## Automated Testing
+
+Testing also requires pytest:
+
+Using conda:
+
+    conda install pytest
+
+Using pip:
+
+    pip install pytest
+
+Execution:
+
+    pytest
