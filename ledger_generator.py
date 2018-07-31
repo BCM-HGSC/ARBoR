@@ -147,9 +147,7 @@ def get_record_dump(record):
 
 def hash_block(block):
     ''' Generate hash object of the block contents. '''
-    data = get_record_dump(block)
-    if not isinstance(data, bytes):
-        data = data.encode('ascii')
+    data = get_record_dump(block).encode('ascii')
     return HASH.new(data)
 
 def sign_block(block):
