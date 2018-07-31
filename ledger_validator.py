@@ -195,7 +195,8 @@ def get_record_dump(record):
 
 def hash_block(block):
     ''' Generate hash object of the block contents. '''
-    return HASH.new(get_record_dump(block))
+    data = get_record_dump(block).encode('ascii')
+    return HASH.new(data)
 
 class ASCIIBytesJSONEncoder(json.JSONEncoder):
     """Extends normal encode to convert """
