@@ -3,7 +3,7 @@
     <origin>
         <org.pcpgm.gis.fedmsg.v4.EnvelopeSender>
             <senderId>BCM HGSC Clinical Laboratory</senderId>
-            <timestampMs>1438752080004</timestampMs>
+            <timestampMs>1073409413486</timestampMs>
         </org.pcpgm.gis.fedmsg.v4.EnvelopeSender>
     </origin>
     <objMessage class="hgsc.siteReport">
@@ -312,7 +312,7 @@
     <origin>
         <org.pcpgm.gis.fedmsg.v4.EnvelopeSender>
             <senderId>BCM HGSC Clinical Laboratory</senderId>
-            <timestampMs>1438752080004</timestampMs>
+            <timestampMs>1073409413486</timestampMs>
         </org.pcpgm.gis.fedmsg.v4.EnvelopeSender>
     </origin>
     <objMessage class="hgsc.siteReport">

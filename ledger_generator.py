@@ -119,7 +119,7 @@ SIGNER = None
 
 def write_ledger(ledger_list, filepath=DEFAULT_LEDGER_FILE):
     ''' Write ledger records to file. '''
-    with open(filepath, 'wb') as f:
+    with open(filepath, 'w') as f:
         dump(ledger_list, f, indent=2, sort_keys=True)
         #JJ_TODO: yaml.dump(ledger_list, f, default_flow_style=False)
 
@@ -147,7 +147,10 @@ def get_record_dump(record):
 
 def hash_block(block):
     ''' Generate hash object of the block contents. '''
-    return HASH.new(get_record_dump(block))
+    data = get_record_dump(block)
+    if not isinstance(data, bytes):
+        data = data.encode('ascii')
+    return HASH.new(data)
 
 def sign_block(block):
     ''' Create a digital signature of the block contents and add into block. 
