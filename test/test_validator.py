@@ -54,18 +54,18 @@ def test_read_ledger():
         {
             u'previousblockhash': b'',
             u'localid': u'smpid_0',
-            u'filehash': b'n0Od+EuQKQX9pp2w4jCOhyUixW9z+NLDVa14220cPTkYkojRc82'
-                         b'tgcRTOfF+P9qbQpnLRIMjTNlNBKD+A5XGtQ==',
+            u'filehash': b'wg14UvdBnxg90dxMhdaquhxqUcmckemoEbtxGMWo4e6BXjFIU7h'
+                         b'iiNAXDjhnmIvIYq7A08xixCS7qIEuJyDfSw==',
             u'blockindex': 0,
-            u'filesignature': b'CVzfsk4X6Uy8uRiOwcgHWE1ouaa7+1XxLb3s3xWR2MCEMj'
-                              b'3h/uuIs8ueADBSZ+gPheEFHuV9ESvikMI96TWR80MiotYc'
-                              b'S2AYOpJO7x2VWT0SAa95YEPimShLgPyRXGf44JZPXha/s'
-                              b'/0ySI5LePqHuz54l+0ThYHDkQz87irEc1Y=',
-            u'blocktimestamp': 1530889311.415133,
+            u'blocksignature': b'UQks4EgJJbFTp4piYJYtNXdGXLTodo8CzUdqCPqALY9qf'
+                               b'vcLaoo0tIyiiQ/ozhz5FPGbolCwmAV4OTqaz7DAB7trT1'
+                               b'VVod12WMcx01x0MThfagqqqS789O4iCkbRUFvPHtLy2ki'
+                               b'/plLS0XT6oDBrZYxDZL+gpWbq9Q3VzgmxZCE=',
+            u'blocktimestamp': 1533071723.108952,
             u'patientid': u'22651339',
             u'rptid': u'rptid_100002',
             u'rpttype': u'xml',
-            u'rptdate': 1064739376262
+            u'rptdate': 1010316094784
         }
     ]
     assert ledger_validator.BLOCKCHAIN == EXEPECTED_RECORDS
