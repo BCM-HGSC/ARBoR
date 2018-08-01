@@ -302,6 +302,7 @@ def run(paths, check_latest=False, ledger_path=DEFAULT_LEDGER_FILE, publickey_pa
                 print('%s\t%s' % (path, valid_msg))
         else:
             print('%s\t%s' % (path, invalid_msg))
+    return 0
 
 if __name__ == '__main__':
     main()
