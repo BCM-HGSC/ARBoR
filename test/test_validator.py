@@ -100,3 +100,14 @@ def test_get_file_hash():
     expected = (b'Hwh+kaKZ/sqhcL4KBo0gXoiWUw9P1TsuQfUBEu8bdADFBWBJCJWw2Rcdu3L'
                 b'OxCOCbM6N3p/xFhvzzpBbV2d+uA==')
     assert file_digest == expected
+
+
+def test_ledger_no_files(capsys):
+    returncode = run([],
+                     True,
+                     'test/resources/arbor-ledger.json',
+                     'test/resources/arbor-public.key')
+    captured = capsys.readouterr()
+    assert captured.err == ''
+    assert captured.out == ''
+    assert returncode == 0
