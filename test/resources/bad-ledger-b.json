@@ -1,0 +1,122 @@
+[
+  {
+    "blockindex": 0, 
+    "blocksignature": "UQks4EgJJbFTp4piYJYtNXdGXLTodo8CzUdqCPqALY9qfvcLaoo0tIyiiQ/ozhz5FPGbolCwmAV4OTqaz7DAB7trT1VVod12WMcx01x0MThfagqqqS789O4iCkbRUFvPHtLy2ki/plLS0XT6oDBrZYxDZL+gpWbq9Q3VzgmxZCE=", 
+    "blocktimestamp": 1533071723.108952, 
+    "filehash": "wg14UvdBnxg90dxMhdaquhxqUcmckemoEbtxGMWo4e6BXjFIU7hiiNAXDjhnmIvIYq7A08xixCS7qIEuJyDfSw==", 
+    "localid": "smpid_0", 
+    "patientid": "22651339", 
+    "previousblockhash": "", 
+    "rptdate": 1010316094784, 
+    "rptid": "rptid_100002", 
+    "rpttype": "xml"
+  }, 
+  {
+    "blockindex": 1, 
+    "blocksignature": "uYDHf8oIXYcwvQnn7V67j61PO/WWPK2F+mvuwEaRK79lRN3VXH4Dr1VMSe9k8vCexnO0ACuBLA9h8wDeXqzVyy7Gz0bjvuBM5NGMRPoR2Z/EQaQyLlEA18zg1jB6Tt/osIcrlT5ozKpkss7pupZw45Ti3Tjy9eZ5lFFTMh59uhE=", 
+    "blocktimestamp": 1533071723.112062, 
+    "filehash": "Hwh+kaKZ/sqhcL4KBo0gXoiWUw9P1TsuQfUBEu8bdADFBWBJCJWw2Rcdu3LOxCOCbM6N3p/xFhvzzpBbV2d+uA==", 
+    "localid": "smpid_0", 
+    "patientid": "123456", 
+    "previousblockhash": "sRWuZHeIZffe2Bl/sJ//uPsLjBKLKGiNTnIbELU3RoE/pHRCJrd5rFIL2wRgQS9sThtKfx6BSZnHT1cp9z1QpQ==", 
+    "rptdate": 1023512400000, 
+    "rptid": "rptid_100000", 
+    "rpttype": "pdf"
+  }, 
+  {
+    "blockindex": 2, 
+    "blocksignature": "GM7ptWZv8va1LM3UzjijKmbRLnHVJoXC/I4jKNWMhHh1/L/PpY3gegR5fP1KrN9Pd2f2afe3wwltIddICZNTlgmNuioUDR0E+/PE0RH4cqrFtYM3+JU3F1VugAaj1eor7m6njJp2jX2hHlAMq8Ug6sZviDWOU5sPCtVfI87Ok5A=", 
+    "blocktimestamp": 1533071723.11491, 
+    "filehash": "0Zt3eLvs1tgZwVjZ+YbOo5ZqyFqnQLBqOtJD5Q5ifb+hyTWl5bc04aJv+tWI0t17E6XMbtdQ1F3EcgjXWcZ0QA==", 
+    "localid": "smpid_1", 
+    "patientid": "123456", 
+    "previousblockhash": "LJfxWBlkuV8kOV6nCQjd7LDF3joEiaAwYJYxvJca452CGJ+JU5eH6EtDAl6fAM2T4KzpO28kzHPWYgTa8jGdow==", 
+    "rptdate": 1035694800000, 
+    "rptid": "rptid_100003", 
+    "rpttype": "pdf"
+  }, 
+  {
+    "blockindex": 3, 
+    "blocksignature": "qKs40ZkZ5+hvPb1gaSvhqmHvbjXSAt6i+ELW4ucmJkhRcUdNVUSJDzTYRMMPi9SZrohh3TKBwogK2gFFdler/wbsIrxp/7/P8+Q1tsfH/CJKvlXsHqQhwpkiEAR3nKxKlqSOOn3CXIubA+nNy/M4uSQbbwv3QYT1miwxreSra70=", 
+    "blocktimestamp": 1533071723.117743, 
+    "filehash": "++6v8+PWKemtW5RRc8E1EB/96g8Xno77hhDKo/KOBU+bvGcl5JDToI8P1m+ixgKJmk/FEQ6AjxNW3Mf4Hqfa0g==", 
+    "localid": "smpid_0", 
+    "patientid": "22651339", 
+    "previousblockhash": "3DN8/oNtBRLJyqYJ3RNksd/JnWkX3ZE7gO/AXlkTqQOMZRcY5gfTPtCelYfjyTRthR8H5RBwDJQQhiyltF+Tdg==", 
+    "rptdate": 1073409413486, 
+    "rptid": "rptid_100004", 
+    "rpttype": "xml"
+  }, 
+  {
+    "blockindex": 4, 
+    "blocksignature": "kdCEpLwTS7LdaE9yprfG6XxziqjjkSKw5eKI8OU/owJdTgsv490ZbEgXCnZDrLCw86aQyEj4C6xfZOKgdr0ndmLZZeTHoYNwlT9XvG+XfhaTFzvmHTXSjZUZy+tiT0eV9FEidwLjDqnGg8oCOWNu6XINWbVtM2e0c3ZUUUNDaP0=", 
+    "blocktimestamp": 1533071723.120537, 
+    "filehash": "/oJrhr+j5uQz4//HNupzUOkZ7873Yd1dEGUAcW/m+EuW6Xf5M0EfyQxSoNrNEichEACpHjULLZOvvKDg+1x9LA==", 
+    "localid": "smpid_0", 
+    "patientid": "22651339", 
+    "previousblockhash": "QCnE17wmvtF//ebU9Gm317ukecGM1KKIqNE+H+t+Jy0x5Wvf2y2rCcOip0+WP4hvHC3GkUhkBN0GAbgyu3EpcQ==", 
+    "rptdate": 1118763923993, 
+    "rptid": "rptid_100000", 
+    "rpttype": "xml"
+  }, 
+  {
+    "blockindex": 5, 
+    "blocksignature": "VPF4gcVN1aeiJMLBAff6Hc0aOhwqrHv4oRfpu034el2uDGu49PnWExFnfCq2O6uFfc8dp6phxzqF7OuWE/wg2F0qD6lY2KHd4hM9eMvubrvYTC91u+pn54HroZMJ4y9Pl8uXy/INiam14kTFpowFlh1WlYvtrzVbm8g6SDQL7Qw=", 
+    "blocktimestamp": 1533071723.123348, 
+    "filehash": "R1ZIlitWyI8ZZHmZ6EJ7DBSBAMApHgzsL13kK7EvEIL6PjR02OfSg32Nt1wbw171NSeFNk9FHpcygxSf15ep6g==", 
+    "localid": "smpid_0", 
+    "patientid": "123456", 
+    "previousblockhash": "Z3EBJwYSF/aDPfwPG9H+b/IDzQG8qPUg51yyFRRf7h/zO0EbYaKA2vhhldVHjFeFdlNvU3D7lEbvHffDvZDRRg==", 
+    "rptdate": 1140933600000, 
+    "rptid": "rptid_100004", 
+    "rpttype": "pdf"
+  }, 
+  {
+    "blockindex": 6, 
+    "blocksignature": "Y2bDxL2Lg+/sPCxAzmEv/1L8HisE1YZlwtiy+qsHswsd9UX1tLrkgWKSg8y7LBZQkwhqSVHz6twK/LLKdYo57ik5ZIusp0CNWglEj3BHZXPtVEIu52jSTVKcolhrL/+HKQ/rl3GbH66F7UegwOnyaOn8zLdOjq0WshnRW/P0nIo=", 
+    "blocktimestamp": 1533071723.126264, 
+    "filehash": "vIMCba4GT3TebsphJMe6VaSQvVl2JlOwYixd/JV9UlQCjDzLgCgmDzGmbkc0zhfryQzBL7y/i+4h6aBEpIZXEQ==", 
+    "localid": "smpid_1", 
+    "patientid": "22651339", 
+    "previousblockhash": "V08AoCedymEN5nfNE0oPqcI2UCcVNHsX3FK7IoNPRhbI1qm/FznhgtSNJIc7WyIyPph59AWD/FJRufrQSmyusw==", 
+    "rptdate": 1277063718577, 
+    "rptid": "rptid_100003", 
+    "rpttype": "xml"
+  }, 
+  {
+    "blockindex": 7, 
+    "blocksignature": "EEYCOvoAVMbVj+Kf2gatbZLzoadj3z6piYUXEij5As8lH07+s6ijDiIDtOKEf5HZ1hDQNmVILyYFKSkSrg5mbZb3r5YUl6PDdI86pbgHuKnHpqJDRrhVn8coEuWfFr/TrTEGp7m5NrqUWEN763ltCP6QXqB0gj+ywpXOo0RbRxY=", 
+    "blocktimestamp": 1533071723.12917, 
+    "filehash": "wSP2uUmea4Iwgn5rbcLZH2fzO9+WzrM9VVMVCpbEbXoFKY+G7L/J7+7GZxQk9D+8tX6eEUj5RYmutvgDSTFi6w==", 
+    "localid": "smpid_1", 
+    "patientid": "123456", 
+    "previousblockhash": "/uaj7Ty2Ax+NvqZ2HhCeNUvPPpsCltv2j9Oioc7qytKfIud9jKYw42LbT1dLXNqSMxOZS4+sO56J6mX02FkmHw==", 
+    "rptdate": 1292911200000, 
+    "rptid": "rptid_100001", 
+    "rpttype": "pdf"
+  }, 
+  {
+    "blockindex": 8, 
+    "blocksignature": "GpQFxFkgSLyT+Q0oiiJqnaa+rDBD+IEHm+CqVclK00gP5N/SueSczInXjmQg2yqPO4KDtlk5LI16NdfrtfTVkt491QNOezR9qh1MIG7BFHvvk5igYf3PvQwBukYGLCIlK1iBw4tz543OM+4ASO+/N+6pBzkikJexwo5rzR/IOkw=", 
+    "blocktimestamp": 1533071723.132018, 
+    "filehash": "a6ah+wApozpSMn+ylkBU3RMdhYRec1+e3hOub3uUrFwV/R1O716mZrYHdYdbwrEA1zX27XgBMzA5Jk62my6qig==", 
+    "localid": "smpid_0", 
+    "patientid": "123456", 
+    "previousblockhash": "DaKrNWOvKEuPdn/qBZ77QK7ifMfCB1PV0Merho6b/qzQUhBNXjlEnWNU9Su+pLt8xW3pkUvqQaMEFgWQU2gi0B==", 
+    "rptdate": 1317099600000, 
+    "rptid": "rptid_100002", 
+    "rpttype": "pdf"
+  }, 
+  {
+    "blockindex": 9, 
+    "blocksignature": "J24Bp5PAaGKlN8/NOP/sYB26CvF+Jg9RwGTWHL9unccmsqkeQocFKg3HUAa1c5m1i6B36Rvl4G8BhYkQ50GfMC6QETRLXFU6RlBnEeJrYAkM+dtl1I+viGHcOl+dnT7X1G60jOJLfZ/O5XxLWR31kOQ1I02UqmLHnL/J/W+WHZU=", 
+    "blocktimestamp": 1533071723.134851, 
+    "filehash": "DnHSa5uGoxtPDeEXRSOv0nJrOFm5Odo5qNtcaTM8tiRWh4Nfa1KkaEv2PtLj9+gS99gQMEFZuhQU167eraMCPQ==", 
+    "localid": "smpid_1", 
+    "patientid": "22651339", 
+    "previousblockhash": "M2/Xh5qnlQuU8+fogVgtJZGLCQ7B/FzuEt5K6s72zK/AqNa9RkHAM2eHEA0zUV9j5JWHw2s6fLit2e9azeYe4A==", 
+    "rptdate": 1337265797661, 
+    "rptid": "rptid_100001", 
+    "rpttype": "xml"
+  }
+]
