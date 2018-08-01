@@ -111,3 +111,14 @@ def test_ledger_no_files(capsys):
     assert captured.err == ''
     assert captured.out == ''
     assert returncode == 0
+
+
+@pytest.mark.xfail  # TODO: implement after we have a spec on this
+def test_detect_broken_link(capsys):
+    returncode = run(['test/resources/files'],
+                      True,
+                      'test/resources/bad-ledger-b.json',
+                      'test/resources/arbor-public.key')
+    captured = capsys.readouterr()
+    assert captured.err == 'block 8 has bad link\n'
+    assert captured.out == 'BLOCKCHAIN_ERROR\n'
