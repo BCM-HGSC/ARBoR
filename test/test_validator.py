@@ -122,6 +122,7 @@ def test_detect_broken_link(capsys):
     captured = capsys.readouterr()
     assert captured.err == 'block 8 has bad link\n'
     assert captured.out == 'BLOCKCHAIN_ERROR\n'
+    assert returncode == 2
 
 
 @pytest.mark.xfail  # TODO: implement after we have a spec on this
@@ -133,3 +134,16 @@ def test_detect_bad_signature(capsys):
     captured = capsys.readouterr()
     assert captured.err == 'block 8 has bad signature\n'
     assert captured.out == 'BLOCKCHAIN_ERROR\n'
+    assert returncode == 3
+
+
+@pytest.mark.xfail  # TODO: implement after we have a spec on this
+def test_detect_bad_key(capsys):
+    returncode = run(['test/resources/files'],
+                      True,
+                      'test/resources/arbor-ledger.json',
+                      'test/resources/arbor-bad-public.key')
+    captured = capsys.readouterr()
+    assert captured.err == 'block 9 has bad signature\n'
+    assert captured.out == 'BLOCKCHAIN_ERROR\n'
+    assert returncode == 3
