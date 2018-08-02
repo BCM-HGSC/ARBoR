@@ -54,9 +54,6 @@ XML_SAMPLE_TAG = './objMessage/report/order/localOrderNumber'
 XML_RPTDATE_TAG = './origin/org.pcpgm.gis.fedmsg.v4.EnvelopeSender/timestampMs'
 XML_PATIENT_TAG = './objMessage/report/order/senderOrderNumber'
 
-# Attributes that positively identify the PHI table.
-#HTML_PHI_TABLE_ID_ATTRS = {'class':'MsoTable15Grid4Accent5'}#dev_note: probably shouldn't rely on a style for identifying phi table.
-
 # Field names to retrive from HTML report PHI table.
 HTML_RPTID_KEY = 'JJ_TODO:HTML_RPTID_KEY'
 HTML_SAMPLE_KEY = 'Accession #'
@@ -70,7 +67,6 @@ RPTID = 'rptid'
 RPTDATE = 'rptdate'
 FILEPATH = 'filepath'
 FILEHASH = 'filehash'
-#FILESIG = 'filesignature' # JJ_NOTE: No longer using filesignature - instead using blocksignature.
 REPORTTYPE = 'rpttype'
 BLOCKINDEX = 'blockindex'
 BLOCKTIMESTAMP = 'blocktimestamp'
@@ -108,7 +104,6 @@ assert HTML_REQUIRED_FIELDS.issubset(list(HTML_FIELDS_MAP.values())), 'required 
 
 # Block size for buffering file reads.
 BUFFERSIZE = 65536 #64*1024 # JJ_NOTE: Rename BLOCKSIZE to avoid confusion with file buffering and ledger block.
-#BLOCKSIZE = 65536 #64*1024
 
 # Globals initialized by functions.
 SIGNER = None
@@ -140,10 +135,6 @@ def get_record_dump(record):
     ''' Returns a single digestible string of dictionary contents. '''
     # NOTE: JSON with sorted keys provides is a very universal spec.
     return dumps(record, sort_keys=True)
-
-# def hash_block(block):
-#     ''' Generate checksum of block. '''
-#     return b64encode(HASH.new(get_record_dump(block)).digest())
 
 def hash_block(block):
     ''' Generate hash object of the block contents. '''
@@ -226,8 +217,6 @@ def verify_file(filehash):
         # JJ_TODO: Do we need to verify digital signatures in the ledger-generation phase?
         #          Would it even be possible to determine if the file has been tampered with on DNANexus?
         #          I suspect not, and a modified file would be picked up as a completely new file and added to the ledger.
-        #sig = b64decode(rec[FILESIG])
-        #return VERIFIER.verify(filehash, sig)
         return True
     else:
         return False
@@ -346,7 +335,6 @@ def make_soup(html_report_filepath):
 
 def get_phi_table(htmlsoup):
     ''' Find PHI table element in HTML file using text that is known to exist within table element. '''
-#    matches = htmlsoup.findAll('table', attrs=HTML_PHI_TABLE_ID_ATTRS) #dev_note: probably shouldn't rely on a style for identifying phi table.
     # Use regular expression to identify cell nested within phi table.
     known_text_regexp = '.*%s.*' % HTML_RPTDATE_KEY
     pattern = re.compile(known_text_regexp)
@@ -476,9 +464,6 @@ def sign_records(records):
         filehash = get_file_hash(filepath)
         # Store the checksum.
         record[FILEHASH] = b64encode(filehash.digest()) # Note, hex is preferred for visual comparisons.
-#         # Generate a digital signature for the file.
-#         signature = b64encode(SIGNER.sign(filehash))
-#         record[FILESIG] = signature
     return
 
 def create_xml_records(paths, recursive):
@@ -552,7 +537,6 @@ def run(paths, recursive=True, ledger_path=DEFAULT_LEDGER_FILE, privatekey_path=
     
     # Read existing blockchain.
     read_ledger(ledger_path)
-    #load_verifier(publickey_path)
 
     # Create ledger.
     print('Generating Ledger')
@@ -560,5 +544,4 @@ def run(paths, recursive=True, ledger_path=DEFAULT_LEDGER_FILE, privatekey_path=
     print('Done')
 
 if __name__ == '__main__':
-    #pass
     main()

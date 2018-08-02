@@ -37,9 +37,7 @@ PATIENT = 'patientid'
 SAMPLE = 'localid'
 RPTID = 'rptid'
 RPTDATE = 'rptdate'
-#FILEPATH = 'filepath'
 FILEHASH = 'filehash'
-#FILESIG = 'filesignature'
 REPORTTYPE = 'rpttype'
 BLOCKINDEX = 'blockindex'
 BLOCKTIMESTAMP = 'blocktimestamp'
@@ -49,7 +47,6 @@ BLOCKSIG = 'blocksignature'
 
 # Block size for buffering file reads.
 BUFFERSIZE = 65536 #64*1024 # JJ_NOTE: Rename BLOCKSIZE to avoid confusion with file buffering and ledger block.
-#BLOCKSIZE = 65536 #64*1024
 
 # Globals initialized by functions.
 BLOCKCHAIN = [] #JJ_NOTE: Renamed from 'RECORDS' to 'BLOCKCHAIN'.
@@ -160,16 +157,6 @@ def get_file_hash(filepath):
             buf = afile.read(BUFFERSIZE)
     return filehash
 
-# def verify_file(filehash):
-#     ''' Verify contents of file have not been tampered with.
-#         Returns True if file can be matched by digital signature against a ledger record. '''
-#     rec = get_record_by_hash(filehash)
-#     if rec:
-#         sig = b64decode(rec[FILESIG])
-#         return VERIFIER.verify(filehash, sig)
-#     else:
-#         return False
-
 # JJ_TODO: Rename to 'verify_block'.
 def verify_file(filehash):
     ''' Verify contents of file have not been tampered with. 
@@ -188,10 +175,6 @@ def get_record_dump(record):
     ''' Returns a single digestible string of dictionary contents. '''
     # NOTE: JSON with sorted keys provides is a very universal spec.
     return dumps(record, sort_keys=True)
-
-# def hash_block(block):
-#     ''' Generate checksum of block. '''
-#     return b64encode(HASH.new(get_record_dump(block)).digest())
 
 def hash_block(block):
     ''' Generate hash object of the block contents. '''
