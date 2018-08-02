@@ -157,8 +157,7 @@ def get_file_hash(filepath):
             buf = afile.read(BUFFERSIZE)
     return filehash
 
-# JJ_TODO: Rename to 'verify_block'.
-def verify_file(filehash):
+def verify_block(filehash):
     ''' Verify contents of file have not been tampered with. 
         Returns True if block can be verified by its digital signature. '''
     block = get_record_by_hash(filehash)
@@ -273,7 +272,7 @@ def run(paths, check_latest=False, ledger_path=DEFAULT_LEDGER_FILE, publickey_pa
     # Verify Files.
     for path in filepathgen:
         filehash = get_file_hash(path)
-        is_valid = verify_file(filehash)
+        is_valid = verify_block(filehash)
         if is_valid:
             if check_latest:
                 rec = get_record_by_hash(filehash)
