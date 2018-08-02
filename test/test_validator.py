@@ -122,3 +122,14 @@ def test_detect_broken_link(capsys):
     captured = capsys.readouterr()
     assert captured.err == 'block 8 has bad link\n'
     assert captured.out == 'BLOCKCHAIN_ERROR\n'
+
+
+@pytest.mark.xfail  # TODO: implement after we have a spec on this
+def test_detect_bad_signature(capsys):
+    returncode = run(['test/resources/files'],
+                      True,
+                      'test/resources/bad-ledger-c.json',
+                      'test/resources/arbor-public.key')
+    captured = capsys.readouterr()
+    assert captured.err == 'block 8 has bad signature\n'
+    assert captured.out == 'BLOCKCHAIN_ERROR\n'
