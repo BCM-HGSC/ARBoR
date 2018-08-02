@@ -7,10 +7,10 @@ from ledger_validator import run
 
 
 def test_ledger_basic(capsys):
-    run(['test/resources/files'],
-        True,
-        'test/resources/arbor-ledger.json',
-        'test/resources/arbor-public.key')
+    returncode = run(['test/resources/files'],
+                     True,
+                     'test/resources/arbor-ledger.json',
+                     'test/resources/arbor-public.key')
     captured = capsys.readouterr()
     assert captured.err == ''
     lines = captured.out.splitlines()
@@ -19,6 +19,7 @@ def test_ledger_basic(capsys):
         expected = fin.read()
     expected_lines = expected.splitlines()
     assert sorted_lines == expected_lines
+    assert returncode == 0
 
 
 @pytest.mark.xfail  # TODO: Missing input should be an error
