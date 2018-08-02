@@ -455,8 +455,7 @@ def create_pdf_rec_from_html_reports(html_report_filepaths):
             print('WARN: Skipped HTML file: "%s" - %s' % (html_path, e))
     return records
 
-# JJ_TODO: rename method - does not sign anymore.
-def sign_records(records):
+def hash_files(records):
     ''' Generate hash, signature, for file associated with each record, store in ledger record. '''
     for record in records:
         # Create a hash object from the file.
@@ -499,7 +498,7 @@ def create_ledger(paths=[''], recursive=True, ledger_path=DEFAULT_LEDGER_FILE):
     pdf_records = create_pdf_records(paths, recursive)
     # Add digital signature of file to each record in ledger.
     all_records = xml_records + pdf_records
-    sign_records(all_records)
+    hash_files(all_records)
     # Remove filepath from records - not needed in ledger.
     for rec in all_records: rec.pop(FILEPATH, None)
     # Sort records before writing.
