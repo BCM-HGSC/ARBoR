@@ -431,16 +431,6 @@ def get_record_dump(record):
 # Globals used in reading/verifying ledger
 BLOCKCHAIN = []  # JJ_NOTE: Renamed from 'RECORDS' to 'BLOCKCHAIN'.
 RECORDS_BY_HASH = {}
-VERIFIER = None
-
-
-def load_verifier(publickey_path):
-    global VERIFIER
-    if os.path.isfile(publickey_path):
-        publickey = import_key(publickey_path)
-        VERIFIER = PKCS.new(publickey)
-    else:
-        raise Exception('Public key file "%s" does not exist' % publickey_path)
 
 
 def verify_file(filehash):
