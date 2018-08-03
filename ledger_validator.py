@@ -163,7 +163,7 @@ def load_verifier(publickey_path):
 
 
 def import_key(filepath=DEFAULT_PUBLIC_KEY_FILE):
-    ''' Import an RSA key from a provided file. '''
+    '''Import an RSA key from a provided file.'''
     with open(filepath, 'rb') as f:
         key = RSA.importKey(f.read())
     return key
@@ -175,7 +175,7 @@ def import_key(filepath=DEFAULT_PUBLIC_KEY_FILE):
 
 def get_latest_hashes(group_by_filetype=False):
     '''Get set of hash digests from the ledger associated with the latest
-    reports of each sample. '''
+    reports of each sample.'''
     # Flatten signatures of latest rptid into a single list.
     latest_by_smp = get_latest_info_by_smp(group_by_filetype)
     listoflists = [s[FILEHASH] for s in latest_by_smp.values()]
@@ -265,7 +265,7 @@ def get_filepath_gen(paths,
 
 
 def is_match(path, patterns):
-    ''' Returns True if path matches any pattern in patterns. '''
+    '''Returns True if path matches any pattern in patterns.'''
     for pattern in patterns:
         if fnmatch.fnmatch(path, pattern):
             return True

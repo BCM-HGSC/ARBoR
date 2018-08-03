@@ -196,8 +196,8 @@ def load_signer(privatekey):
 def generate_rsa_keys(privatefile=DEFAULT_PRIVATE_KEY_FILE,
                       pubfile=DEFAULT_PUBLIC_KEY_FILE,
                       key_size=KEY_SIZE):
-    ''' Generate a fresh RSA private/public key pair and write to file.
-        Returns the privatekey object. '''
+    '''Generate a fresh RSA private/public key pair and write to file.
+    Returns the privatekey object.'''
     print('Generating new RSA keys...')
     privatekey = RSA.generate(key_size)
     publickey = privatekey.publickey()
@@ -210,7 +210,7 @@ def generate_rsa_keys(privatefile=DEFAULT_PRIVATE_KEY_FILE,
 
 
 def import_key(filepath=DEFAULT_PRIVATE_KEY_FILE):
-    ''' Import and return the RSA key from the provided file. '''
+    '''Import and return the RSA key from the provided file.'''
     with open(filepath, 'rb') as f:
         key = RSA.importKey(f.read())
     return key
@@ -255,14 +255,14 @@ def create_ledger(paths=[''], recursive=True, ledger_path=DEFAULT_LEDGER_FILE):
 
 
 def write_ledger(ledger_list, filepath=DEFAULT_LEDGER_FILE):
-    ''' Write ledger records to file. '''
+    '''Write ledger records to file.'''
     with open(filepath, 'w') as f:
         dump(ledger_list, f, indent=2, sort_keys=True)
         # JJ_TODO: yaml.dump(ledger_list, f, default_flow_style=False)
 
 
 def get_comparator():
-    ''' Lambda function that can be used for sorting report records. '''
+    '''Lambda function that can be used for sorting report records.'''
     return lambda record: (record[RPTDATE], record[REPORTTYPE])
 
 
@@ -286,9 +286,8 @@ def create_xml_records(paths, recursive):
 
 
 def parse_xml_files(filepaths):
-    '''Parse data needed for ledger from XML files.
-    Returns a dictionary containing initial ledger entries for valid XML
-    files.'''
+    '''Parse data needed for ledger from XML files. Returns a dictionary
+    containing initial ledger entries for valid XML files.'''
     records = list()
     for path in filepaths:
         # Skip file if already in ledger
@@ -321,7 +320,7 @@ def parse_xml_files(filepaths):
 
 def create_pdf_records(paths, recursive):
     '''Find html and pdf files in paths and create ledger records for pdf
-    reports based on parsed html data. '''
+    reports based on parsed html data.'''
     # Search paths for HTML report files.
     html_path_iters = [get_filepaths(path, HTML_FILENAME_PATTERN, recursive)
                        for path in paths]
@@ -365,7 +364,7 @@ def create_pdf_rec_from_html_reports(html_report_filepaths):
 
 def hash_files(records):
     '''Generate hash, signature, for file associated with each record, store
-    in ledger record. '''
+    in ledger record.'''
     for record in records:
         # Create a hash object from the file.
         filepath = record[FILEPATH]
@@ -381,7 +380,7 @@ def hash_files(records):
 ####################
 
 def append_block(chain, record):
-    ''' Link a new record onto the chain. '''
+    '''Link a new record onto the chain.'''
     # Link current block to previous block in chain.
     if len(chain) != 0:
         previous_block = chain[-1]
@@ -401,14 +400,14 @@ def append_block(chain, record):
 
 
 def genesis_block():
-    ''' Special case for record being the very first in the blockchain. '''
+    '''Special case for record being the very first in the blockchain.'''
     genesis_info = {BLOCKINDEX: -1}
     return genesis_info
 
 
 def sign_block(block):
-    ''' Create a digital signature of the block contents and add into block.
-        This must be the very last step. '''
+    '''Create a digital signature of the block contents and add into block.
+    This must be the very last step.'''
     blockhash = hash_block(block)
     # Generate a digital signature for the block.
     signature = b64encode(SIGNER.sign(blockhash))
@@ -417,13 +416,13 @@ def sign_block(block):
 
 
 def hash_block(block):
-    ''' Generate hash object of the block contents. '''
+    '''Generate hash object of the block contents.'''
     data = get_record_dump(block).encode('ascii')
     return HASH.new(data)
 
 
 def get_record_dump(record):
-    ''' Returns a single digestible string of dictionary contents. '''
+    '''Returns a single digestible string of dictionary contents.'''
     # NOTE: JSON with sorted keys provides is a very universal spec.
     return dumps(record, sort_keys=True)
 
@@ -490,7 +489,7 @@ def is_already_in_ledger(filepath):
 
 
 class ASCIIBytesJSONEncoder(json.JSONEncoder):
-    """Extends normal encode to convert """
+    '''Extends normal encode to convert'''
     def default(self, o):
         if isinstance(o, bytes):
             return o.decode('ascii')
