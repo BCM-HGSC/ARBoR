@@ -112,9 +112,6 @@ assert HTML_REQUIRED_FIELDS.issubset(list(HTML_FIELDS_MAP.values())), (
 # block.
 BUFFERSIZE = 65536  # 64*1024
 
-# Globals initialized by functions.
-SIGNER = None
-
 
 ###############
 # Main Method #
@@ -156,14 +153,14 @@ def run(paths, recursive=True, ledger_path=DEFAULT_LEDGER_FILE,
         privatekey_path=DEFAULT_PRIVATE_KEY_FILE,
         publickey_path=DEFAULT_PUBLIC_KEY_FILE):
     # Load or generate RSA keys and file signer.
-    init_rsa(privatekey_path, publickey_path)
+    signer = init_rsa(privatekey_path, publickey_path)
 
     # Read existing blockchain.
     read_ledger(ledger_path)
 
     # Create ledger.
     print('Generating Ledger')
-    create_ledger(paths, recursive, ledger_path)
+    create_ledger(signer, paths, recursive, ledger_path)
     print('Done')
 
 
@@ -180,17 +177,17 @@ def init_rsa(privatekey_path=DEFAULT_PRIVATE_KEY_FILE,
     else:
         print('RSA keys not found.')
         privatekey = generate_rsa_keys(privatekey_path, publickey_path)
-    load_signer(privatekey)
+    signer = load_signer(privatekey)
+    return signer
 
 
 def load_signer(privatekey):
-    '''Initialize global object SIGNER with an RSA PrivateKey object.
-    If key is too small for signing or otherwise invalid, an exception is
-    thrown.'''
-    global SIGNER
-    SIGNER = PKCS.new(privatekey)
-    assert SIGNER.can_sign(), ('Invalid private key - Generate new keys '
+    '''Return an RSA PrivateKey object. If key is too small for signing or
+    otherwise invalid, an exception is thrown.'''
+    signer = PKCS.new(privatekey)
+    assert signer.can_sign(), ('Invalid private key - Generate new keys '
                                'before retrying.')
+    return signer
 
 
 def generate_rsa_keys(privatefile=DEFAULT_PRIVATE_KEY_FILE,
@@ -231,7 +228,8 @@ def read_ledger(filepath=DEFAULT_LEDGER_FILE):
             RECORDS_BY_HASH[rec[FILEHASH]] = rec
 
 
-def create_ledger(paths=[''], recursive=True, ledger_path=DEFAULT_LEDGER_FILE):
+def create_ledger(signer, paths=[''],
+                  recursive=True, ledger_path=DEFAULT_LEDGER_FILE):
     # Assert paths are directories.
     paths = [cleanup_dirpath(path) for path in paths]
     # Create XML records.
@@ -248,7 +246,7 @@ def create_ledger(paths=[''], recursive=True, ledger_path=DEFAULT_LEDGER_FILE):
     all_records.sort(key=get_comparator())
     # Add records to the existing chain.
     for rec in all_records:
-        append_block(BLOCKCHAIN, rec)
+        append_block(BLOCKCHAIN, signer, rec)
     # Write records to ledger file.
     # JJ_TODO: Append to file instead of overwriting existing.
     write_ledger(BLOCKCHAIN, ledger_path)
@@ -379,7 +377,7 @@ def hash_files(records):
 # Blockchain Utils #
 ####################
 
-def append_block(chain, record):
+def append_block(chain, signer, record):
     '''Link a new record onto the chain.'''
     # Link current block to previous block in chain.
     if len(chain) != 0:
@@ -392,7 +390,7 @@ def append_block(chain, record):
     record[BLOCKINDEX] = previous_block[BLOCKINDEX] + 1
     record[BLOCKTIMESTAMP] = time.time()
     # Lock block contents with a digital signature.
-    sign_block(record)
+    sign_block(signer, record)
     # JJ_TODO: Do some validations on the record - test that it should be
     # allowed before adding onto the chain.
     # Append block to chain.
@@ -405,12 +403,12 @@ def genesis_block():
     return genesis_info
 
 
-def sign_block(block):
+def sign_block(signer, block):
     '''Create a digital signature of the block contents and add into block.
     This must be the very last step.'''
     blockhash = hash_block(block)
     # Generate a digital signature for the block.
-    signature = b64encode(SIGNER.sign(blockhash))
+    signature = b64encode(signer.sign(blockhash))
     block[BLOCKSIG] = signature
     return block
 
