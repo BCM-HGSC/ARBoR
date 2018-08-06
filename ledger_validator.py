@@ -17,7 +17,11 @@ import Crypto.Hash.SHA512 as HASH  # pip install pycrypto
 import Crypto.Signature.PKCS1_v1_5 as PKCS
 from Crypto.PublicKey import RSA
 
-from arbor import __version__
+from arbor import (
+    __version__,
+    DEFAULT_LEDGER_FILE,
+    DEFAULT_PUBLIC_KEY_FILE,
+)
 from arbor.blockchain import (
     dumps, get_blockchain, get_file_hash, get_record_by_hash, hash_block,
     PATIENT,
@@ -33,12 +37,6 @@ from arbor.blockchain import (
     BLOCKHASH,
     BLOCKSIG,
 )
-
-# Default Filepath of Ledger.
-DEFAULT_LEDGER_FILE = 'arbor-ledger.json'
-
-# Default Filepath of RSA Public Key.
-DEFAULT_PUBLIC_KEY_FILE = 'arbor-public.key'
 
 # Default Patterns to Match Against Filenames when Searching for Reports.
 # Note, this must be a Unix shell style pattern (see fnmatch).

@@ -21,7 +21,12 @@ import xml.etree.ElementTree as ET
 import Crypto.Signature.PKCS1_v1_5 as PKCS
 from Crypto.PublicKey import RSA
 
-from arbor import __version__
+from arbor import (
+    __version__,
+    DEFAULT_LEDGER_FILE,
+    DEFAULT_PRIVATE_KEY_FILE,
+    DEFAULT_PUBLIC_KEY_FILE,
+)
 from arbor.blockchain import (
     append_block, dump, get_blockchain,
     get_file_hash, hash_files, is_already_in_ledger,
@@ -38,13 +43,6 @@ from arbor.blockchain import (
     BLOCKHASH,
     BLOCKSIG,
 )
-
-# Default path for reading/writing ledger file.
-DEFAULT_LEDGER_FILE = 'arbor-ledger.json'
-
-# Default path for reading/writing RSA Key files.
-DEFAULT_PRIVATE_KEY_FILE = 'arbor-private.key'
-DEFAULT_PUBLIC_KEY_FILE = 'arbor-public.key'
 
 # Bit-length used when generating a new RSA private key.
 KEY_SIZE = 3072
