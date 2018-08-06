@@ -52,7 +52,6 @@ BUFFERSIZE = 65536  # 64*1024 # JJ_NOTE: Rename BLOCKSIZE to avoid confusion
 # Globals initialized by functions.
 BLOCKCHAIN = []  # JJ_NOTE: Renamed from 'RECORDS' to 'BLOCKCHAIN'.
 RECORDS_BY_HASH = {}
-VERIFIER = None
 
 
 ###############
@@ -91,7 +90,7 @@ def run(paths, check_latest=False,
         publickey_path=DEFAULT_PUBLIC_KEY_FILE):
     # Initialize.
     read_ledger(ledger_path)
-    load_verifier(publickey_path)
+    verifier = load_verifier(publickey_path)
     latest = get_latest_hashes(
         group_by_filetype=True
     )  # Note: 'True' may return multiple hashes per sample.
@@ -109,7 +108,7 @@ def run(paths, check_latest=False,
     # Verify Files.
     for path in filepathgen:
         filehash = get_file_hash(path)
-        is_valid = verify_block(filehash)
+        is_valid = verify_block(verifier, filehash)
         if is_valid:
             if check_latest:
                 rec = get_record_by_hash(filehash)
@@ -154,12 +153,12 @@ def convert_field_to_binary(record, field_name):
 ######################
 
 def load_verifier(publickey_path):
-    global VERIFIER
     if os.path.isfile(publickey_path):
         publickey = import_key(publickey_path)
-        VERIFIER = PKCS.new(publickey)
+        verifier = PKCS.new(publickey)
     else:
         raise Exception('Public key file "%s" does not exist' % publickey_path)
+    return verifier
 
 
 def import_key(filepath=DEFAULT_PUBLIC_KEY_FILE):
@@ -287,7 +286,7 @@ def get_file_hash(filepath):
     return filehash
 
 
-def verify_block(filehash):
+def verify_block(verifier, filehash):
     '''Verify contents of file have not been tampered with.
     Returns True if block can be verified by its digital signature.'''
     block = get_record_by_hash(filehash)
@@ -296,7 +295,7 @@ def verify_block(filehash):
         # Remove sig from block before hashing the block to .
         del block[BLOCKSIG]
         blockhash = hash_block(block)
-        return VERIFIER.verify(blockhash, blocksig)
+        return verifier.verify(blockhash, blocksig)
     else:
         return False
 
