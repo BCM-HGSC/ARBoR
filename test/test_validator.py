@@ -2,8 +2,10 @@ from base64 import b64encode
 
 import pytest
 
+import arbor
+from arbor.blockchain import Blockchain, get_record_by_hash
 import ledger_validator
-from ledger_validator import run, Blockchain
+from ledger_validator import run
 
 
 def test_ledger_basic(capsys):
@@ -48,7 +50,7 @@ def test_ledger_bad_key():
 
 
 def test_read_ledger():
-    ledger_validator.BLOCKCHAIN = Blockchain()
+    ledger_validator.BLOCKCHAIN = arbor.BLOCKCHAIN = Blockchain()
     ledger_validator.read_ledger('test/resources/arbor-ledger-00.json')
     EXEPECTED_RECORDS = [
         {

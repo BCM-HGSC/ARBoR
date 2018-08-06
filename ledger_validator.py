@@ -18,6 +18,22 @@ import Crypto.Signature.PKCS1_v1_5 as PKCS
 from Crypto.PublicKey import RSA
 
 from arbor import __version__
+from arbor.blockchain import (
+    dumps, get_file_hash, get_record_by_hash, hash_block,
+    BLOCKCHAIN,  # global mutable object
+    PATIENT,
+    SAMPLE,
+    RPTID,
+    RPTDATE,
+    FILEPATH,
+    FILEHASH,
+    REPORTTYPE,
+    BLOCKINDEX,
+    BLOCKTIMESTAMP,
+    PREVBLOCKHASH,
+    BLOCKHASH,
+    BLOCKSIG,
+)
 
 # Default Filepath of Ledger.
 DEFAULT_LEDGER_FILE = 'arbor-ledger.json'
@@ -31,23 +47,6 @@ DEFAULT_REPORT_FILEPATTERNS = ['*.xml', '*.pdf']
 
 # Default Method for Searching a Directory for Reports.
 DEFAULT_DIRECTORY_RECURSION = True
-
-# Field names used in ledger and ledger output.
-PATIENT = 'patientid'
-SAMPLE = 'localid'
-RPTID = 'rptid'
-RPTDATE = 'rptdate'
-FILEHASH = 'filehash'
-REPORTTYPE = 'rpttype'
-BLOCKINDEX = 'blockindex'
-BLOCKTIMESTAMP = 'blocktimestamp'
-PREVBLOCKHASH = 'previousblockhash'
-BLOCKHASH = 'blockhash'
-BLOCKSIG = 'blocksignature'
-
-# Block size for buffering file reads.
-BUFFERSIZE = 65536  # 64*1024 # JJ_NOTE: Rename BLOCKSIZE to avoid confusion
-# with file buffering and ledger block.
 
 
 ###############
@@ -269,18 +268,6 @@ def is_match(path, patterns):
 # File Verification #
 #####################
 
-def get_file_hash(filepath):
-    '''Create and return a hash object populated with the contents of the file
-    at filepath.'''
-    filehash = HASH.new()
-    with open(filepath, 'rb') as afile:
-        buf = afile.read(BUFFERSIZE)
-        while len(buf) > 0:
-            filehash.update(buf)
-            buf = afile.read(BUFFERSIZE)
-    return filehash
-
-
 def verify_block(verifier, filehash):
     '''Verify contents of file have not been tampered with.
     Returns True if block can be verified by its digital signature.'''
@@ -293,49 +280,6 @@ def verify_block(verifier, filehash):
         return verifier.verify(blockhash, blocksig)
     else:
         return False
-
-
-def get_record_by_hash(filehash):
-    '''Find and return the ledger record created with a matching hash.'''
-    digest = b64encode(filehash.digest())
-    record = BLOCKCHAIN.by_hash.get(digest)
-    return record
-
-
-def hash_block(block):
-    '''Generate hash object of the block contents.'''
-    data = get_record_dump(block).encode('ascii')
-    return HASH.new(data)
-
-
-def get_record_dump(record):
-    '''Returns a single digestible string of dictionary contents.'''
-    # NOTE: JSON with sorted keys provides is a very universal spec.
-    return dumps(record, sort_keys=True)
-
-
-class ASCIIBytesJSONEncoder(json.JSONEncoder):
-    """Extends normal encode to convert """
-    def default(self, o):
-        if isinstance(o, bytes):
-            return o.decode('ascii')
-        else:
-            return JSONEncoder.default(self, o)
-
-
-dump = partial(json.dump, cls=ASCIIBytesJSONEncoder)
-dumps = partial(json.dumps, cls=ASCIIBytesJSONEncoder)
-
-
-class Blockchain(object):
-    """A list of "blocks" with an index by hash."""
-    def __init__(self):
-        self.blocks = []
-        self.by_hash = {}
-
-
-# Globals used in reading/verifying ledger
-BLOCKCHAIN = Blockchain()
 
 
 if __name__ == '__main__':
