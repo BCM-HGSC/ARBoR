@@ -13,9 +13,6 @@ import fnmatch
 from functools import partial
 import sys
 from base64 import b64encode, b64decode
-import Crypto.Hash.SHA512 as HASH  # pip install pycrypto
-import Crypto.Signature.PKCS1_v1_5 as PKCS
-from Crypto.PublicKey import RSA
 
 from arbor import (
     __version__,
@@ -37,6 +34,7 @@ from arbor.blockchain import (
     BLOCKHASH,
     BLOCKSIG,
 )
+from arbor.rsa import load_verifier
 
 # Default Patterns to Match Against Filenames when Searching for Reports.
 # Note, this must be a Unix shell style pattern (see fnmatch).
@@ -137,26 +135,6 @@ def convert_field_to_binary(record, field_name):
     old = record[field_name]
     new = old.encode('ascii')
     record[field_name] = new
-
-
-######################
-# RSA Key Operations #
-######################
-
-def load_verifier(publickey_path):
-    if os.path.isfile(publickey_path):
-        publickey = import_key(publickey_path)
-        verifier = PKCS.new(publickey)
-    else:
-        raise Exception('Public key file "%s" does not exist' % publickey_path)
-    return verifier
-
-
-def import_key(filepath=DEFAULT_PUBLIC_KEY_FILE):
-    '''Import an RSA key from a provided file.'''
-    with open(filepath, 'rb') as f:
-        key = RSA.importKey(f.read())
-    return key
 
 
 ######################
