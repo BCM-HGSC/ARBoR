@@ -218,14 +218,12 @@ def import_key(filepath=DEFAULT_PRIVATE_KEY_FILE):
 ##########################
 
 def read_ledger(filepath=DEFAULT_LEDGER_FILE):
-    '''Read records from ledger file and store in global variable
-    BLOCKCHAIN.'''
-    global BLOCKCHAIN, RECORDS_BY_HASH
+    '''Returns list of records from ledger file.'''
     if os.path.exists(filepath):
         with open(filepath, 'rb') as f:
-            BLOCKCHAIN = [entry for entry in json.load(f)]
-        for rec in BLOCKCHAIN:
-            RECORDS_BY_HASH[rec[FILEHASH]] = rec
+            BLOCKCHAIN.blocks = [entry for entry in json.load(f)]
+        for rec in blockchain:
+            BLOCKCHAIN.by_hash[rec[FILEHASH]] = rec
 
 
 def create_ledger(signer, paths=[''],
@@ -246,10 +244,10 @@ def create_ledger(signer, paths=[''],
     all_records.sort(key=get_comparator())
     # Add records to the existing chain.
     for rec in all_records:
-        append_block(BLOCKCHAIN, signer, rec)
+        append_block(BLOCKCHAIN.blocks, signer, rec)
     # Write records to ledger file.
     # JJ_TODO: Append to file instead of overwriting existing.
-    write_ledger(BLOCKCHAIN, ledger_path)
+    write_ledger(BLOCKCHAIN.blocks, ledger_path)
 
 
 def write_ledger(ledger_list, filepath=DEFAULT_LEDGER_FILE):
@@ -428,9 +426,15 @@ def get_record_dump(record):
 # ledger_validator module - DRY!
 
 
+class Blockchain(object):
+    """A list of "blocks" with an index by hash."""
+    def __init__(self):
+        self.blocks = []
+        self.by_hash = {}
+
+
 # Globals used in reading/verifying ledger
-BLOCKCHAIN = []  # JJ_NOTE: Renamed from 'RECORDS' to 'BLOCKCHAIN'.
-RECORDS_BY_HASH = {}
+BLOCKCHAIN = Blockchain()
 
 
 def verify_file(filehash):
@@ -451,9 +455,8 @@ def verify_file(filehash):
 
 def get_record_by_hash(filehash):
     '''Find and return the ledger record created with a matching hash.'''
-    global RECORDS_BY_HASH
     digest = b64encode(filehash.digest())
-    record = RECORDS_BY_HASH.get(digest)
+    record = BLOCKCHAIN.by_hash.get(digest)
     return record
 
 

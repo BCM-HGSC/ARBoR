@@ -49,10 +49,6 @@ BLOCKSIG = 'blocksignature'
 BUFFERSIZE = 65536  # 64*1024 # JJ_NOTE: Rename BLOCKSIZE to avoid confusion
 # with file buffering and ledger block.
 
-# Globals initialized by functions.
-BLOCKCHAIN = []  # JJ_NOTE: Renamed from 'RECORDS' to 'BLOCKCHAIN'.
-RECORDS_BY_HASH = {}
-
 
 ###############
 # Main Method #
@@ -132,14 +128,13 @@ def run(paths, check_latest=False,
 def read_ledger(filepath=DEFAULT_LEDGER_FILE):
     '''Read records from ledger file and store in global variable
     BLOCKCHAIN.'''
-    global BLOCKCHAIN, RECORDS_BY_HASH
     with open(filepath, 'rb') as f:
-        BLOCKCHAIN = [entry for entry in json.load(f)]
-    for rec in BLOCKCHAIN:
+        BLOCKCHAIN.blocks = [entry for entry in json.load(f)]
+    for rec in BLOCKCHAIN.blocks:
         convert_field_to_binary(rec, FILEHASH)
         convert_field_to_binary(rec, BLOCKSIG)
         convert_field_to_binary(rec, PREVBLOCKHASH)
-        RECORDS_BY_HASH[rec[FILEHASH]] = rec
+        BLOCKCHAIN.by_hash[rec[FILEHASH]] = rec
 
 
 def convert_field_to_binary(record, field_name):
@@ -193,7 +188,7 @@ def get_latest_info_by_smp(group_by_filetype=False):
                   # JJ_TODO: Should blocksig even be a part of this?
                  }
     latest_by_smp = {}
-    for rec in BLOCKCHAIN:
+    for rec in BLOCKCHAIN.blocks:
         smp = rec[SAMPLE]
         if group_by_filetype:
             # Refine grouping to distinguish file extension.
@@ -302,9 +297,8 @@ def verify_block(verifier, filehash):
 
 def get_record_by_hash(filehash):
     '''Find and return the ledger record created with a matching hash.'''
-    global RECORDS_BY_HASH
     digest = b64encode(filehash.digest())
-    record = RECORDS_BY_HASH.get(digest)
+    record = BLOCKCHAIN.by_hash.get(digest)
     return record
 
 
@@ -331,6 +325,17 @@ class ASCIIBytesJSONEncoder(json.JSONEncoder):
 
 dump = partial(json.dump, cls=ASCIIBytesJSONEncoder)
 dumps = partial(json.dumps, cls=ASCIIBytesJSONEncoder)
+
+
+class Blockchain(object):
+    """A list of "blocks" with an index by hash."""
+    def __init__(self):
+        self.blocks = []
+        self.by_hash = {}
+
+
+# Globals used in reading/verifying ledger
+BLOCKCHAIN = Blockchain()
 
 
 if __name__ == '__main__':
