@@ -1,9 +1,15 @@
 from base64 import b64encode
 
+import py
 import pytest
 
+import arbor
+from arbor.blockchain import get_blockchain
 import ledger_validator
 from ledger_validator import run
+
+
+RESOURCE_BASE = py.path.local('test/resources')
 
 
 def test_ledger_basic(capsys):
@@ -20,6 +26,44 @@ def test_ledger_basic(capsys):
     expected_lines = expected.splitlines()
     assert sorted_lines == expected_lines
     assert returncode == 0
+
+
+def test_ledger_two_files(capsys):
+    assert RESOURCE_BASE.check(dir=1)
+    src1 = RESOURCE_BASE.join('files/rpt_test-100000.pdf')
+    src2 = RESOURCE_BASE.join('files/rpt_test-100001.pdf')
+    assert src1.check(file=1)
+    assert src2.check(file=1)
+    run([str(src1), str(src2)],
+        True,
+        'test/resources/arbor-ledger.json',
+        'test/resources/arbor-public.key')
+    captured = capsys.readouterr()
+    assert captured.err == ''
+    lines = captured.out.splitlines()
+    sorted_lines = sorted(lines)
+    print(sorted_lines)
+    assert len(lines) == 2
+
+
+def test_ledger_duplicate_file(tmpdir, capsys):
+    assert RESOURCE_BASE.check(dir=1)
+    src1 = RESOURCE_BASE.join('files/rpt_test-100000.pdf')
+    src2 = tmpdir.join('rpt.pdf')
+    assert not src2.check()
+    src1.copy(src2)
+    assert src1.check(file=1)
+    assert src2.check(file=1)
+    run([str(src1), str(src2)],
+        True,
+        'test/resources/arbor-ledger.json',
+        'test/resources/arbor-public.key')
+    captured = capsys.readouterr()
+    assert captured.err == ''
+    lines = captured.out.splitlines()
+    sorted_lines = sorted(lines)
+    print(sorted_lines)
+    assert len(lines) == 2
 
 
 @pytest.mark.xfail  # TODO: Missing input should be an error
@@ -48,8 +92,8 @@ def test_ledger_bad_key():
 
 
 def test_read_ledger():
-    ledger_validator.BLOCKCHAIN = None
-    ledger_validator.RECORDS_BY_HASH = {}
+    blockchain = get_blockchain()
+    blockchain.clear()
     ledger_validator.read_ledger('test/resources/arbor-ledger-00.json')
     EXEPECTED_RECORDS = [
         {
@@ -69,9 +113,9 @@ def test_read_ledger():
             u'rptdate': 1010316094784
         }
     ]
-    assert ledger_validator.BLOCKCHAIN == EXEPECTED_RECORDS
+    assert blockchain.blocks == EXEPECTED_RECORDS
     block = EXEPECTED_RECORDS[0]
-    assert ledger_validator.RECORDS_BY_HASH == {
+    assert blockchain.by_hash == {
         block[u'filehash']: block
     }
 
