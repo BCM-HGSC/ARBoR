@@ -81,7 +81,7 @@ def run(paths, check_latest=False,
         ledger_path=DEFAULT_LEDGER_FILE,
         publickey_path=DEFAULT_PUBLIC_KEY_FILE):
     # Initialize.
-    read_ledger(ledger_path)
+    blockchain = read_ledger(ledger_path)
     verifier = load_verifier(publickey_path)
 
     # Examine blockchain for latest hashes by sample.

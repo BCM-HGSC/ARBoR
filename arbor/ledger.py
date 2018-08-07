@@ -95,7 +95,9 @@ assert HTML_REQUIRED_FIELDS.issubset(list(HTML_FIELDS_MAP.values())), (
 
 
 def read_ledger(filepath=DEFAULT_LEDGER_FILE, optional=False):
-    '''Read records from ledger file and store in global blockchain.'''
+    '''Read records from ledger file and store in global blockchain. Return
+    the blockchain if it exists. If the file does not exist then raise unless
+    optional is True, in which case return None.'''
     if optional and not os.path.exists(filepath):
         return  # It's OK if the ledger is missing and optional is True.
     blockchain = get_blockchain()
@@ -106,6 +108,7 @@ def read_ledger(filepath=DEFAULT_LEDGER_FILE, optional=False):
         convert_field_to_binary(rec, BLOCKSIG)
         convert_field_to_binary(rec, PREVBLOCKHASH)
         blockchain.by_hash[rec[FILEHASH]] = rec
+    return blockchain
 
 
 def convert_field_to_binary(record, field_name):
