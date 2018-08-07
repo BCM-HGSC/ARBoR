@@ -401,11 +401,6 @@ def cleanup_dirpath(path):
     return cleanpath
 
 
-def get_formatted_date(timestamp):
-    '''Convert millisecond timestamp to formatted date string.'''
-    return time.strftime(DATE_FORMAT, time.localtime(timestamp/1000))
-
-
 def get_timestamp(date_str, format_str=DATE_FORMAT):
     '''Convert formatted date string to millisecond timestamp.'''
     return int(time.mktime(time.strptime(date_str, format_str))) * 1000
