@@ -231,11 +231,8 @@ def verify_block(verifier, filehash):
     Returns True if block can be verified by its digital signature.'''
     block = get_record_by_hash(filehash)
     if block:
-        copy = dict(block)
-        blocksig = b64decode(copy[BLOCKSIG])
-        # Remove sig from block before hashing the block to .
-        del copy[BLOCKSIG]
-        blockhash = hash_block(copy)
+        blocksig = b64decode(block[BLOCKSIG])
+        blockhash = hash_block(block)
         return verifier.verify(blockhash, blocksig)
     else:
         return False
