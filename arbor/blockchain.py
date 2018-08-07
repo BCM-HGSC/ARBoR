@@ -105,7 +105,7 @@ def sign_block(signer, block):
 
 
 def hash_block(block):
-    '''Generate hash object of the block contents.'''
+    '''Generate hash object of the block contents, excluding the signature.'''
     data = get_record_dump(block).encode('ascii')
     return HASH.new(data)
 
