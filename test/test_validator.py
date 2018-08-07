@@ -3,7 +3,7 @@ from base64 import b64encode
 import pytest
 
 import arbor
-from arbor.blockchain import get_blockchain, get_record_by_hash
+from arbor.blockchain import get_blockchain
 import ledger_validator
 from ledger_validator import run
 
