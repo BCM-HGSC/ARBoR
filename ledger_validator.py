@@ -34,6 +34,7 @@ from arbor.blockchain import (
     BLOCKHASH,
     BLOCKSIG,
 )
+from arbor.ledger import read_ledger
 from arbor.rsa import load_verifier
 
 # Default Patterns to Match Against Filenames when Searching for Reports.
@@ -113,28 +114,6 @@ def run(paths, check_latest=False,
         else:
             print('%s\t%s' % (path, invalid_msg))
     return 0
-
-
-##########################
-# Ledger File Read/Write #
-##########################
-
-def read_ledger(filepath=DEFAULT_LEDGER_FILE):
-    '''Read records from ledger file and store in global blockchain.'''
-    blockchain = get_blockchain()
-    with open(filepath, 'rb') as f:
-        blockchain.blocks = [entry for entry in json.load(f)]
-    for rec in blockchain.blocks:
-        convert_field_to_binary(rec, FILEHASH)
-        convert_field_to_binary(rec, BLOCKSIG)
-        convert_field_to_binary(rec, PREVBLOCKHASH)
-        blockchain.by_hash[rec[FILEHASH]] = rec
-
-
-def convert_field_to_binary(record, field_name):
-    old = record[field_name]
-    new = old.encode('ascii')
-    record[field_name] = new
 
 
 ######################
