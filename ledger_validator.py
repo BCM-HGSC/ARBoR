@@ -19,8 +19,7 @@ from Crypto.PublicKey import RSA
 
 from arbor import __version__
 from arbor.blockchain import (
-    dumps, get_file_hash, get_record_by_hash, hash_block,
-    BLOCKCHAIN,  # global mutable object
+    dumps, get_blockchain, get_file_hash, get_record_by_hash, hash_block,
     PATIENT,
     SAMPLE,
     RPTID,
@@ -125,15 +124,15 @@ def run(paths, check_latest=False,
 ##########################
 
 def read_ledger(filepath=DEFAULT_LEDGER_FILE):
-    '''Read records from ledger file and store in global variable
-    BLOCKCHAIN.'''
+    '''Read records from ledger file and store in global blockchain.'''
+    blockchain = get_blockchain()
     with open(filepath, 'rb') as f:
-        BLOCKCHAIN.blocks = [entry for entry in json.load(f)]
-    for rec in BLOCKCHAIN.blocks:
+        blockchain.blocks = [entry for entry in json.load(f)]
+    for rec in blockchain.blocks:
         convert_field_to_binary(rec, FILEHASH)
         convert_field_to_binary(rec, BLOCKSIG)
         convert_field_to_binary(rec, PREVBLOCKHASH)
-        BLOCKCHAIN.by_hash[rec[FILEHASH]] = rec
+        blockchain.by_hash[rec[FILEHASH]] = rec
 
 
 def convert_field_to_binary(record, field_name):
@@ -187,7 +186,8 @@ def get_latest_info_by_smp(group_by_filetype=False):
                   # JJ_TODO: Should blocksig even be a part of this?
                  }
     latest_by_smp = {}
-    for rec in BLOCKCHAIN.blocks:
+    blockchain = get_blockchain()
+    for rec in blockchain.blocks:
         smp = rec[SAMPLE]
         if group_by_filetype:
             # Refine grouping to distinguish file extension.

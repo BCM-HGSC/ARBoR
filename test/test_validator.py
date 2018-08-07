@@ -3,7 +3,7 @@ from base64 import b64encode
 import pytest
 
 import arbor
-from arbor.blockchain import Blockchain, get_record_by_hash
+from arbor.blockchain import get_blockchain, get_record_by_hash
 import ledger_validator
 from ledger_validator import run
 
@@ -50,7 +50,8 @@ def test_ledger_bad_key():
 
 
 def test_read_ledger():
-    ledger_validator.BLOCKCHAIN = arbor.BLOCKCHAIN = Blockchain()
+    blockchain = get_blockchain()
+    blockchain.clear()
     ledger_validator.read_ledger('test/resources/arbor-ledger-00.json')
     EXEPECTED_RECORDS = [
         {
@@ -70,9 +71,9 @@ def test_read_ledger():
             u'rptdate': 1010316094784
         }
     ]
-    assert ledger_validator.BLOCKCHAIN.blocks == EXEPECTED_RECORDS
+    assert blockchain.blocks == EXEPECTED_RECORDS
     block = EXEPECTED_RECORDS[0]
-    assert ledger_validator.BLOCKCHAIN.by_hash == {
+    assert blockchain.by_hash == {
         block[u'filehash']: block
     }
 

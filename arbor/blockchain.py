@@ -29,15 +29,25 @@ BLOCKHASH = 'blockhash'
 BLOCKSIG = 'blocksignature'
 
 
+# Globals used in reading/verifying ledger
+_blockchain = None
+
+
+def get_blockchain():
+    global _blockchain
+    if _blockchain is None:
+        _blockchain = Blockchain()
+    return _blockchain
+
+
 class Blockchain(object):
     """A list of "blocks" with an index by hash."""
     def __init__(self):
+        self.clear()
+
+    def clear(self):
         self.blocks = []
         self.by_hash = {}
-
-
-# Globals used in reading/verifying ledger
-BLOCKCHAIN = Blockchain()
 
 
 def hash_files(records):
@@ -124,7 +134,7 @@ def verify_file(filehash):
 def get_record_by_hash(filehash):
     '''Find and return the ledger record created with a matching hash.'''
     digest = b64encode(filehash.digest())
-    record = BLOCKCHAIN.by_hash.get(digest)
+    record = get_blockchain().by_hash.get(digest)
     return record
 
 

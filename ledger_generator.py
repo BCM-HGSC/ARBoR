@@ -23,8 +23,8 @@ from Crypto.PublicKey import RSA
 
 from arbor import __version__
 from arbor.blockchain import (
-    append_block, dump, get_file_hash, hash_files, is_already_in_ledger,
-    BLOCKCHAIN,  # global mutable object
+    append_block, dump, get_blockchain,
+    get_file_hash, hash_files, is_already_in_ledger,
     PATIENT,
     SAMPLE,
     RPTID,
@@ -211,12 +211,13 @@ def import_key(filepath=DEFAULT_PRIVATE_KEY_FILE):
 ##########################
 
 def read_ledger(filepath=DEFAULT_LEDGER_FILE):
-    '''Returns list of records from ledger file.'''
+    '''Read records from ledger file and store in global blockchain.'''
     if os.path.exists(filepath):
+        blockchain = get_blockchain()
         with open(filepath, 'rb') as f:
-            BLOCKCHAIN.blocks = [entry for entry in json.load(f)]
+            blockchain.blocks = [entry for entry in json.load(f)]
         for rec in blockchain:
-            BLOCKCHAIN.by_hash[rec[FILEHASH]] = rec
+            blockchain.by_hash[rec[FILEHASH]] = rec
 
 
 def create_ledger(signer, paths=[''],
@@ -236,11 +237,12 @@ def create_ledger(signer, paths=[''],
     # Sort records before writing.
     all_records.sort(key=get_comparator())
     # Add records to the existing chain.
+    blockchain = get_blockchain()
     for rec in all_records:
-        append_block(BLOCKCHAIN.blocks, signer, rec)
+        append_block(blockchain.blocks, signer, rec)
     # Write records to ledger file.
     # JJ_TODO: Append to file instead of overwriting existing.
-    write_ledger(BLOCKCHAIN.blocks, ledger_path)
+    write_ledger(blockchain.blocks, ledger_path)
 
 
 def write_ledger(ledger_list, filepath=DEFAULT_LEDGER_FILE):
