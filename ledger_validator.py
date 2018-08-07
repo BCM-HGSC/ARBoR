@@ -13,17 +13,29 @@ import fnmatch
 from functools import partial
 import sys
 from base64 import b64encode, b64decode
-import Crypto.Hash.SHA512 as HASH  # pip install pycrypto
-import Crypto.Signature.PKCS1_v1_5 as PKCS
-from Crypto.PublicKey import RSA
 
-__version__ = '1.1.0+dev'
-
-# Default Filepath of Ledger.
-DEFAULT_LEDGER_FILE = 'arbor-ledger.json'
-
-# Default Filepath of RSA Public Key.
-DEFAULT_PUBLIC_KEY_FILE = 'arbor-public.key'
+from arbor import (
+    __version__,
+    DEFAULT_LEDGER_FILE,
+    DEFAULT_PUBLIC_KEY_FILE,
+)
+from arbor.blockchain import (
+    dumps, get_blockchain, get_file_hash, get_record_by_hash, hash_block,
+    PATIENT,
+    SAMPLE,
+    RPTID,
+    RPTDATE,
+    FILEPATH,
+    FILEHASH,
+    REPORTTYPE,
+    BLOCKINDEX,
+    BLOCKTIMESTAMP,
+    PREVBLOCKHASH,
+    BLOCKHASH,
+    BLOCKSIG,
+)
+from arbor.ledger import read_ledger
+from arbor.rsa import load_verifier
 
 # Default Patterns to Match Against Filenames when Searching for Reports.
 # Note, this must be a Unix shell style pattern (see fnmatch).
@@ -31,28 +43,6 @@ DEFAULT_REPORT_FILEPATTERNS = ['*.xml', '*.pdf']
 
 # Default Method for Searching a Directory for Reports.
 DEFAULT_DIRECTORY_RECURSION = True
-
-# Field names used in ledger and ledger output.
-PATIENT = 'patientid'
-SAMPLE = 'localid'
-RPTID = 'rptid'
-RPTDATE = 'rptdate'
-FILEHASH = 'filehash'
-REPORTTYPE = 'rpttype'
-BLOCKINDEX = 'blockindex'
-BLOCKTIMESTAMP = 'blocktimestamp'
-PREVBLOCKHASH = 'previousblockhash'
-BLOCKHASH = 'blockhash'
-BLOCKSIG = 'blocksignature'
-
-# Block size for buffering file reads.
-BUFFERSIZE = 65536  # 64*1024 # JJ_NOTE: Rename BLOCKSIZE to avoid confusion
-# with file buffering and ledger block.
-
-# Globals initialized by functions.
-BLOCKCHAIN = []  # JJ_NOTE: Renamed from 'RECORDS' to 'BLOCKCHAIN'.
-RECORDS_BY_HASH = {}
-VERIFIER = None
 
 
 ###############
@@ -91,7 +81,7 @@ def run(paths, check_latest=False,
         publickey_path=DEFAULT_PUBLIC_KEY_FILE):
     # Initialize.
     read_ledger(ledger_path)
-    load_verifier(publickey_path)
+    verifier = load_verifier(publickey_path)
     latest = get_latest_hashes(
         group_by_filetype=True
     )  # Note: 'True' may return multiple hashes per sample.
@@ -109,7 +99,7 @@ def run(paths, check_latest=False,
     # Verify Files.
     for path in filepathgen:
         filehash = get_file_hash(path)
-        is_valid = verify_block(filehash)
+        is_valid = verify_block(verifier, filehash)
         if is_valid:
             if check_latest:
                 rec = get_record_by_hash(filehash)
@@ -124,49 +114,6 @@ def run(paths, check_latest=False,
         else:
             print('%s\t%s' % (path, invalid_msg))
     return 0
-
-
-##########################
-# Ledger File Read/Write #
-##########################
-
-def read_ledger(filepath=DEFAULT_LEDGER_FILE):
-    '''Read records from ledger file and store in global variable
-    BLOCKCHAIN.'''
-    global BLOCKCHAIN, RECORDS_BY_HASH
-    with open(filepath, 'rb') as f:
-        BLOCKCHAIN = [entry for entry in json.load(f)]
-    for rec in BLOCKCHAIN:
-        convert_field_to_binary(rec, FILEHASH)
-        convert_field_to_binary(rec, BLOCKSIG)
-        convert_field_to_binary(rec, PREVBLOCKHASH)
-        RECORDS_BY_HASH[rec[FILEHASH]] = rec
-
-
-def convert_field_to_binary(record, field_name):
-    old = record[field_name]
-    new = old.encode('ascii')
-    record[field_name] = new
-
-
-######################
-# RSA Key Operations #
-######################
-
-def load_verifier(publickey_path):
-    global VERIFIER
-    if os.path.isfile(publickey_path):
-        publickey = import_key(publickey_path)
-        VERIFIER = PKCS.new(publickey)
-    else:
-        raise Exception('Public key file "%s" does not exist' % publickey_path)
-
-
-def import_key(filepath=DEFAULT_PUBLIC_KEY_FILE):
-    '''Import an RSA key from a provided file.'''
-    with open(filepath, 'rb') as f:
-        key = RSA.importKey(f.read())
-    return key
 
 
 ######################
@@ -194,7 +141,8 @@ def get_latest_info_by_smp(group_by_filetype=False):
                   # JJ_TODO: Should blocksig even be a part of this?
                  }
     latest_by_smp = {}
-    for rec in BLOCKCHAIN:
+    blockchain = get_blockchain()
+    for rec in blockchain.blocks:
         smp = rec[SAMPLE]
         if group_by_filetype:
             # Refine grouping to distinguish file extension.
@@ -275,19 +223,7 @@ def is_match(path, patterns):
 # File Verification #
 #####################
 
-def get_file_hash(filepath):
-    '''Create and return a hash object populated with the contents of the file
-    at filepath.'''
-    filehash = HASH.new()
-    with open(filepath, 'rb') as afile:
-        buf = afile.read(BUFFERSIZE)
-        while len(buf) > 0:
-            filehash.update(buf)
-            buf = afile.read(BUFFERSIZE)
-    return filehash
-
-
-def verify_block(filehash):
+def verify_block(verifier, filehash):
     '''Verify contents of file have not been tampered with.
     Returns True if block can be verified by its digital signature.'''
     block = get_record_by_hash(filehash)
@@ -296,42 +232,9 @@ def verify_block(filehash):
         # Remove sig from block before hashing the block to .
         del block[BLOCKSIG]
         blockhash = hash_block(block)
-        return VERIFIER.verify(blockhash, blocksig)
+        return verifier.verify(blockhash, blocksig)
     else:
         return False
-
-
-def get_record_by_hash(filehash):
-    '''Find and return the ledger record created with a matching hash.'''
-    global RECORDS_BY_HASH
-    digest = b64encode(filehash.digest())
-    record = RECORDS_BY_HASH.get(digest)
-    return record
-
-
-def hash_block(block):
-    '''Generate hash object of the block contents.'''
-    data = get_record_dump(block).encode('ascii')
-    return HASH.new(data)
-
-
-def get_record_dump(record):
-    '''Returns a single digestible string of dictionary contents.'''
-    # NOTE: JSON with sorted keys provides is a very universal spec.
-    return dumps(record, sort_keys=True)
-
-
-class ASCIIBytesJSONEncoder(json.JSONEncoder):
-    """Extends normal encode to convert """
-    def default(self, o):
-        if isinstance(o, bytes):
-            return o.decode('ascii')
-        else:
-            return JSONEncoder.default(self, o)
-
-
-dump = partial(json.dump, cls=ASCIIBytesJSONEncoder)
-dumps = partial(json.dumps, cls=ASCIIBytesJSONEncoder)
 
 
 if __name__ == '__main__':
