@@ -17,7 +17,7 @@ import Crypto.Hash.SHA512 as HASH # pip install pycrypto
 import Crypto.Signature.PKCS1_v1_5 as PKCS
 from Crypto.PublicKey import RSA
 
-__version__ = '1.1.0+dev'
+__version__ = '1.1.1'
 
 # Default Filepath of Ledger.
 DEFAULT_LEDGER_FILE = 'arbor-ledger.json'
