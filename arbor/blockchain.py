@@ -28,6 +28,17 @@ PREVBLOCKHASH = 'previousblockhash'
 BLOCKHASH = 'blockhash'
 BLOCKSIG = 'blocksignature'
 
+BLOCK_DATA_KEYS = set((
+    BLOCKINDEX,
+    BLOCKTIMESTAMP,
+    FILEHASH,
+    SAMPLE,
+    PATIENT,
+    PREVBLOCKHASH,
+    RPTDATE,
+    RPTID,
+    REPORTTYPE
+))
 
 # Globals used in reading/verifying ledger
 _blockchain = None
@@ -108,6 +119,7 @@ def hash_block(block):
     if BLOCKSIG in block:
         block = dict(block)
         del block[BLOCKSIG]
+    assert set(block) == BLOCK_DATA_KEYS, set(block) ^ BLOCK_DATA_KEYS
     data = get_record_dump(block).encode('ascii')
     return HASH.new(data)
 
