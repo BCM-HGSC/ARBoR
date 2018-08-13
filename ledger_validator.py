@@ -70,10 +70,11 @@ def main():
                         help='One or more paths to report files and/or '
                              'directories containing report files')
     args = parser.parse_args()
-    run(args.paths,
-        args.check_latest,
-        args.ledger,
-        args.publickey)
+    error_code = run(args.paths,
+                     args.check_latest,
+                     args.ledger,
+                     args.publickey)
+    sys.exit(error_code)
 
 
 def run(paths, check_latest=False,
