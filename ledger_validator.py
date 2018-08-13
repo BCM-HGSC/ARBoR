@@ -85,6 +85,12 @@ def run(paths, check_latest=False,
     blockchain = read_ledger(ledger_path)
     verifier = load_verifier(publickey_path)
 
+    # Check integrity of blockchain.
+    error_code = blockchain.verify_chain(verifier)
+    if error_code:
+        print('BLOCKCHAIN_ERROR')
+        return error_code
+
     # Examine blockchain for latest hashes by sample.
     latest = get_latest_hashes(
         group_by_filetype=True

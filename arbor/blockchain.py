@@ -60,6 +60,21 @@ class Blockchain(object):
         self.blocks = []
         self.by_hash = {}
 
+    def verify_chain(self, verifier):
+        """Verify that all the blocks in the chain link and have valid
+        signatures. Dump errors to file (stderr by default). Return 0 for
+        no error, otherwise the maximum error value."""
+        max_error_code = 0
+        expected_previous_block_hash = b''
+        for index, block in enumerate(self.get_bocks()):
+            error_code = block.verify(index,
+                                      expected_previous_block_hash,
+                                      verifier)
+            h = block.hash()
+            expected_previous_block_hash = b64encode(h.digest())
+            max_error_code = max(error_code, max_error_code)
+        return max_error_code  # TODO
+
     def get_bocks(self):
         """Generate Block objects."""
         for b in self.blocks:
@@ -73,6 +88,8 @@ class Block(object):
     def hash(self):
         return hash_block(self.__dict__)
 
+    def verify(self, index, expected_previous_block_hash, verifier):
+        return 0  # TODO
 
     def verify_signature(self, verifier):
         blocksig = b64decode(self.blocksignature)
