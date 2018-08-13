@@ -1,9 +1,11 @@
 """Code for dealing with a blockchain in memory."""
 
+from __future__ import print_function
 from __future__ import unicode_literals
 from base64 import b64encode, b64decode
 from functools import partial
 import json  # import yaml # http://pyyaml.org/wiki/PyYAML
+import sys
 import time
 
 import Crypto.Hash.SHA512 as HASH  # pip install pycrypto
@@ -95,6 +97,10 @@ class Block(object):
         blocksig = b64decode(self.blocksignature)
         blockhash = self.hash()
         return verifier.verify(blockhash, blocksig)
+
+
+def error(*args, **kwds):
+    print(*args, file=sys.stderr, **kwds)
 
 
 def hash_files(records):
