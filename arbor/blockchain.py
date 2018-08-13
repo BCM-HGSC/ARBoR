@@ -3,8 +3,7 @@
 from __future__ import unicode_literals
 from base64 import b64encode, b64decode
 from functools import partial
-import json
-# import yaml # http://pyyaml.org/wiki/PyYAML
+import json  # import yaml # http://pyyaml.org/wiki/PyYAML
 import time
 
 import Crypto.Hash.SHA512 as HASH  # pip install pycrypto

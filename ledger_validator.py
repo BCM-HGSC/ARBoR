@@ -83,6 +83,8 @@ def run(paths, check_latest=False,
     # Initialize.
     read_ledger(ledger_path)
     verifier = load_verifier(publickey_path)
+
+    # Examine blockchain for latest hashes by sample.
     latest = get_latest_hashes(
         group_by_filetype=True
     )  # Note: 'True' may return multiple hashes per sample.
