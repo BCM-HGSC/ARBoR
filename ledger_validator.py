@@ -20,6 +20,7 @@ from arbor import (
     DEFAULT_PUBLIC_KEY_FILE,
 )
 from arbor.blockchain import (
+    Block,
     dumps, get_blockchain, get_file_hash, get_record_by_hash, hash_block,
     PATIENT,
     SAMPLE,
@@ -231,9 +232,7 @@ def verify_block(verifier, filehash):
     Returns True if block can be verified by its digital signature.'''
     block = get_record_by_hash(filehash)
     if block:
-        blocksig = b64decode(block[BLOCKSIG])
-        blockhash = hash_block(block)
-        return verifier.verify(blockhash, blocksig)
+        return Block(block).verify_signature(verifier)
     else:
         return False
 

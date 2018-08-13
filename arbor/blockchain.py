@@ -60,6 +60,25 @@ class Blockchain(object):
         self.blocks = []
         self.by_hash = {}
 
+    def get_bocks(self):
+        """Generate Block objects."""
+        for b in self.blocks:
+            yield Block(b)
+
+
+class Block(object):
+    def __init__(self, mapping):
+        self.__dict__.update(mapping)
+
+    def hash(self):
+        return hash_block(self.__dict__)
+
+
+    def verify_signature(self, verifier):
+        blocksig = b64decode(self.blocksignature)
+        blockhash = self.hash()
+        return verifier.verify(blockhash, blocksig)
+
 
 def hash_files(records):
     '''Generate hash, signature, for file associated with each record, store
