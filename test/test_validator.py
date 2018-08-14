@@ -7,6 +7,7 @@ import arbor
 from arbor.blockchain import get_blockchain
 import ledger_validator
 from ledger_validator import run
+from resources import BLOCK_0
 
 
 RESOURCE_BASE = py.path.local('test/resources')
@@ -95,24 +96,7 @@ def test_read_ledger():
     blockchain = get_blockchain()
     blockchain.clear()
     ledger_validator.read_ledger('test/resources/arbor-ledger-00.json')
-    EXEPECTED_RECORDS = [
-        {
-            u'previousblockhash': b'',
-            u'localid': u'smpid_0',
-            u'filehash': b'wg14UvdBnxg90dxMhdaquhxqUcmckemoEbtxGMWo4e6BXjFIU7h'
-                         b'iiNAXDjhnmIvIYq7A08xixCS7qIEuJyDfSw==',
-            u'blockindex': 0,
-            u'blocksignature': b'UQks4EgJJbFTp4piYJYtNXdGXLTodo8CzUdqCPqALY9qf'
-                               b'vcLaoo0tIyiiQ/ozhz5FPGbolCwmAV4OTqaz7DAB7trT1'
-                               b'VVod12WMcx01x0MThfagqqqS789O4iCkbRUFvPHtLy2ki'
-                               b'/plLS0XT6oDBrZYxDZL+gpWbq9Q3VzgmxZCE=',
-            u'blocktimestamp': 1533071723.108952,
-            u'patientid': u'22651339',
-            u'rptid': u'rptid_100002',
-            u'rpttype': u'xml',
-            u'rptdate': 1010316094784
-        }
-    ]
+    EXEPECTED_RECORDS = [BLOCK_0]
     assert blockchain.blocks == EXEPECTED_RECORDS
     block = EXEPECTED_RECORDS[0]
     assert blockchain.by_hash == {
