@@ -96,11 +96,10 @@ def test_read_ledger():
     blockchain = get_blockchain()
     blockchain.clear()
     ledger_validator.read_ledger('test/resources/arbor-ledger-00.json')
-    EXEPECTED_RECORDS = [BLOCK_0]
-    assert blockchain.blocks == EXEPECTED_RECORDS
-    block = EXEPECTED_RECORDS[0]
+    assert blockchain.blocks == [BLOCK_0]
+    block = BLOCK_0
     assert blockchain.by_hash == {
-        block[u'filehash']: block
+        BLOCK_0[u'filehash']: BLOCK_0
     }
 
 
