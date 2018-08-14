@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from base64 import b64encode
 
 import py
@@ -99,7 +100,7 @@ def test_read_ledger():
     assert blockchain.blocks == [BLOCK_0]
     block = BLOCK_0
     assert blockchain.by_hash == {
-        BLOCK_0[u'filehash']: BLOCK_0
+        BLOCK_0['filehash']: BLOCK_0
     }
 
 
