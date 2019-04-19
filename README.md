@@ -1,8 +1,6 @@
-# ARBoR (Authenticated Resources in Chained Block Registry)
+# ARBoR (Authenticated Resources in Hashed Block Registry)
 
-Clinical laboratories return the results of clinical testing to the ordering physician as a signed report. This report is often a pdf, but can also be a physical paper copy or a structured data format. Here, we introduce ARBoR, an application for tracking the lineage of versioned clinical reports even when they are distributed as pdf or paper copies. It relies on a distributable blockchain ledger that holds the report versions and uses strong encryption to prevent tampering.
-
-The ARBoR system implements a distributable blockchain based ledger containing  digitally signed records that both authenticates PHI files and enables the discovery of newer versions of those files. This blockchain augments the secure delivery path between clinical lab and downstream EMR system by providing a durable method to verify the authenticity of files and detect if relevant, newer files are known to exist. <Reference to paper>
+Clinical laboratories return the results of clinical testing to the ordering physician as a signed report. This report is often a PDF, but can also be a physical paper copy or a structured data format. Here, we present ARBoR, a simple and efficient approach that addresses the difficulties of monitoring report authenticity by providing a record of cryptographically signed, versioned reports, stored in a replicated ledger. This approach augments the secure delivery path between clinical labs and a downstream Electronic Health Record (EHR) system by providing a durable method to verify the authenticity of files and detect whether newer files are known to exist. More details at <a href='https://www.biorxiv.org/content/10.1101/567875v1'>ARBoR</a>.
 
 The overall ARBoR system consists of four parts:
 - ARBoR Push is integrated into the pipeline of a clinical laboratory. Once the pipeline has generated a clinical report and related files, it uses ARBoR Push to transmit a record about this file to the ARBoR Service.
