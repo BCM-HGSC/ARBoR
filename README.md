@@ -19,7 +19,6 @@ ARBoR is built using Python and is available for public use. Instructions on  bu
 - Packages:
     - Beautiful Soup 4.6+
     - PyCrypto 2.6+
-    - PyYAML 3.13+
 - Ledger File *(eg. arbor-ledger.json)*
 - Public Key *(eg. arbor-public.key)*
 
