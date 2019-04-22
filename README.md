@@ -2,11 +2,11 @@
 
 Clinical laboratories return the results of clinical testing to the ordering physician as a signed report. This report is often a PDF, but can also be a physical paper copy or a structured data format. Here, we present ARBoR, a simple and efficient approach that addresses the difficulties of monitoring report authenticity by providing a record of cryptographically signed, versioned reports, stored in a replicated ledger. This approach augments the secure delivery path between clinical labs and a downstream Electronic Health Record (EHR) system by providing a durable method to verify the authenticity of files and detect whether newer files are known to exist. More details at <a href='https://www.biorxiv.org/content/10.1101/567875v1'>ARBoR</a>.
 
-The overall ARBoR system consists of four parts:
-- ARBoR Push is integrated into the pipeline of a clinical laboratory. Once the pipeline has generated a clinical report and related files, it uses ARBoR Push to transmit a record about this file to the ARBoR Service.
-- ARBoR Service stores records in a public blockchain. It only accepts trusted records from the clinical pipeline.
-- ARBoR Client is typically run by an institutional end user as part of the ingestion process for new clinical reports and related files. It fetches new blocks from the ARBoR Service and uses its local copy of the blockchain to validate and identify files.
-- ARBoRScan  is a mobile app for both <a href='https://goo.gl/QZXpqg' target="_blank">iOS</a> and <a href='https://goo.gl/cLdKB8' target="_blank">Android</a> platforms and is typically run by an end user to fetch metadata about existing reports and check the authenticity and versions of these reports. It also maintains a local copy of the blockchain. It's primary input is scanning QR codes from existing reports.
+The overall ARBoR system consists of three parts:
+
+- ARBoR Service (`ledger_generator.py`) stores records in a public ledger. It only accepts trusted records from the clinical pipeline.
+- ARBoR Client (`ledger_validator.py`) is typically run by an institutional end user as part of the ingestion process for new clinical reports and related files. It fetches new blocks from the ARBoR Service and uses its local copy of the ledger to validate and identify files.
+- ARBoRScan  is a mobile app for both <a href='https://goo.gl/QZXpqg' target="_blank">iOS</a> and <a href='https://goo.gl/cLdKB8' target="_blank">Android</a> platforms and is typically run by an end user to fetch metadata about existing reports and check the authenticity and versions of these reports. It also maintains a local copy of the ledger. It's primary input is scanning QR codes from existing reports.
 
 ARBoR is built using Python and is available for public use. Instructions on  building a ledger and validating the contents of a ledger are provided.
 
